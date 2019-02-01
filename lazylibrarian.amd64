@@ -1,0 +1,11 @@
+FROM linuxserver/lazylibrarian:latest
+EXPOSE 7946
+COPY bin/serf_0.8.1_amd64 /usr/local/bin/serf
+COPY bin/jq_1.6_amd64 /usr/local/bin/jq
+COPY bin/templater /usr/local/bin/templater
+ENV LAKKRIS_SERVICE="lazylibrarian" \
+    LAKKRIS_CONTENT="books" \
+    LAKKRIS_ICON="plugins/images/tabs/lazylibrarian.png" \
+    LAKKRIS_PORT="5299" \
+    LAKKRIS_SERVERNAME="lazylakkris"
+COPY lakkris/ /
