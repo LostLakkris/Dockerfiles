@@ -9,6 +9,10 @@
 			SERVICE="nginx"
 			SCRIPT="${LAKKRIS_SERVICE}"
 			;;
+		"nzbhydra")
+			SERVICE="nzbhydra2"
+			SCRIPT="${LAKKRIS_SERVICE}"
+			;;
 		*)
 			;;
 	esac
