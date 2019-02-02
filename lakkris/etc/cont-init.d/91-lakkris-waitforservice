@@ -30,6 +30,6 @@
 		bash "/lakkris/.config/${SCRIPT}.sh"
 	fi
 	if [ $(s6-svstat -u "/var/run/s6/services/inotifyd") ] ; then
-		s6-svc -r "/var/run/s6/services/inotifyd"
+		s6-svc -wr "/var/run/s6/services/inotifyd"
 	fi
 )&

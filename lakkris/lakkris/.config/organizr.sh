@@ -20,6 +20,6 @@ CONFIG_MD5_START=$(md5sum ${CONFIG_FILE} | awk '{print $1}')
 grep -q -x -F "${CONTENT}" ${CONFIG_FILE} || sed -i "s#^}#${CONTENT}\n}#g" ${CONFIG_FILE}
 CONFIG_MD5_END=$(md5sum ${CONFIG_FILE} | awk '{print $1}')
 
-if [[ "${CONFIG_MD5_START}" != "${CONFIG_MD5_END}" && $(s6-svstat -u "/var/run/s6/services/${LAKKRIS_SERVICE}") ]]; then
-	s6-svc -h "/var/run/s6/services/${LAKKRIS_SERVICE}"
+if [[ "${CONFIG_MD5_START}" != "${CONFIG_MD5_END}" && $(s6-svstat -u "/var/run/s6/services/nginx") ]]; then
+	s6-svc -h "/var/run/s6/services/nginx"
 fi

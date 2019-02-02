@@ -8,3 +8,7 @@ jq -n \
 jq -n \
   --arg anchor "${LAKKRIS_ANCHOR:-organizr}" \
   '{"start_join":[]} | .start_join |= . + [$anchor]' > /etc/serf/join-anchor.json
+
+jq -n \
+  --arg handler "${LAKKRIS_HANDLER:-'/etc/serf/event_handler.sh'}" \
+  '{"event_handlers":[]} | .event_handlers |= . + [$handler]' > /etc/serf/handler.json
