@@ -4,6 +4,9 @@ CONFIG_FILE="/config/nzbhydra.yml"
 while [[ ! -e "${CONFIG_FILE}" ]]; do
 	sleep 1s
 done
+while [[ $(curl -fsS localhost:${LAKKRIS_PORT:-5076} &>/dev/null) -ne 0 ]]; do
+	sleep 1s
+done
 if [[ -z "${LAKKRIS_WEBROOT}" ]]; then
 	LAKKRIS_WEBROOT="${LAKKRIS_SERVERNAME}-${LAKKRIS_SERVICE}"
 fi
@@ -12,13 +15,12 @@ CONFIG_MD5_START=$(md5sum ${CONFIG_FILE} | awk '{print $1}')
 sed -i "${CONFIG_STRING}" "${CONFIG_FILE}"
 CONFIG_MD5_END=$(md5sum ${CONFIG_FILE} | awk '{print $1}')
 
-if [[ "${CONFIG_MD5_START}" != "${CONFIG_MD5_END}" && $(s6-svstat -u "/var/run/s6/services/${LAKKRIS_SERVICE}") ]]; then
-	s6-svc -wD "/var/run/s6/services/${LAKKRIS_SERVICE}"
+if [[ "${CONFIG_MD5_START}" != "${CONFIG_MD5_END}" && $(s6-svstat -u "/var/run/s6/services/nzbhydra2") ]]; then
+	s6-svc -wD "/var/run/s6/services/nzbhydra2"
 	sleep 1s
 	sed -i "${CONFIG_STRING}" ${CONFIG_FILE}
-	s6-svc -wU "/var/run/s6/services/${LAKKRIS_SERVICE}"
+	s6-svc -wU "/var/run/s6/services/nzbhydra2"
 fi
-
 
 UPDATE="export LAKKRIS_WEBROOT=\"${LAKKRIS_WEBROOT}\""
 grep -q "${UPDATE%=*}" /tmp/lakkris.env && sed -i "s@${UPDATE%=*}.*@${UPDATE}@" /tmp/lakkris.env || echo "${UPDATE}" >> /tmp/lakkris.env

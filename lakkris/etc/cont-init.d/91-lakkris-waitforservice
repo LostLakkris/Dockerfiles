@@ -27,10 +27,10 @@
 	done
 	bash /lakkris/.notify/serf-tags.sh
 
-	if [[ -x "/lakkris/.config/${SERVICE}.sh" ]]; then
-		while [[ ! $(s6-svstat -u "/var/run/s6/services/serf") || ! $(s6-svstat -u "/var/run/s6/services/${SERVICE}") ]] ; do
-			sleep 1s
-		done
+	while [[ ! $(s6-svstat -u "/var/run/s6/services/serf") || ! $(s6-svstat -u "/var/run/s6/services/${SERVICE}") ]] ; do
+		sleep 1s
+	done
+	if [[ -x "/lakkris/.config/${SCRIPT}.sh" ]]; then
 		bash "/lakkris/.config/${SCRIPT}.sh"
 	fi
 	if [ $(s6-svstat -u "/var/run/s6/services/inotifyd") ] ; then
