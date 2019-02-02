@@ -27,7 +27,8 @@ fi
 for SERVICE_DATA in ${SERVICES[@]}; do
         SERVERNAME=$(echo "${SERVICE_DATA}" | jq -c --raw-output '.tags.LAKKRIS_SERVERNAME')
         SERVICE_NAME=$(echo "${SERVICE_DATA}" | jq -c --raw-output '.tags.LAKKRIS_SERVICE')
-        if [[ -e /lakkris/tmpl/nginx/${SERVICE_NAME}.conf ]]; then
+        WEBROOT=$(echo "${SERVICE_DATA}" | jq -c --raw-output '.tags.LAKKRIS_WEBROOT')
+        if [[ (-n "${WEBROOT}" || "${SERVICE_NAME}" == "nzbget") && -e /lakkris/tmpl/nginx/${SERVICE_NAME}.conf ]]; then
                 echo "${SERVICE_DATA}" | jq -c --raw-output '.tags | to_entries[] | (.key | ascii_upcase) + "=" + .value' > /tmp/service.env
                 templater /lakkris/tmpl/nginx/${SERVICE_NAME}.conf -f /tmp/service.env -s > "/config/nginx/lakkris/100-${SERVERNAME}-${SERVICE_NAME}.conf"
         fi
