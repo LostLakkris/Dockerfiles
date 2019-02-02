@@ -1,0 +1,14 @@
+#!/usr/bin/with-contenv bash
+# Store base env-vars
+if [[ -e /sys/devices/virtual/net/ethwe ]]; then
+	LAKKRIS_IFACE="ethwe"
+else
+	IFACES=( $(ls -1 /sys/devices/virtual/net/ | awk '!/^lo$/{print}' | sort -r) )
+	LAKKRIS_IFACE=${IFACES[0]}
+fi
+(
+	printenv | awk '!/affinity/{print "export "$0}';
+	echo "export LAKKRIS_HOSTNAME=${HOSTNAME}";
+	echo "export LAKKRIS_IFACE=${LAKKRIS_IFACE}";
+	echo "export LAKKRIS_START=$(date +%s)"
+) | grep 'LAKKRIS' > /tmp/lakkris.env

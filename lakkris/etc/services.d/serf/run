@@ -1,2 +1,2 @@
 #!/usr/bin/with-contenv bash
-exec /usr/local/bin/serf agent --config-dir=/etc/serf
+exec /usr/sbin/serf agent --config-dir=/etc/serf

@@ -1,0 +1,12 @@
+#!/usr/bin/with-contenv bash
+WATCHLIST=()
+if [[ -e "/lakkris/.notify/map.${LAKKRIS_SERVICE}" ]]; then
+	POTENTIALLIST=( $(cut -d ',' -f1 "/lakkris/.notify/map.${LAKKRIS_SERVICE}") )
+	for x in ${POTENTIALLIST[@]}; do
+		if [[ -e ${x%:*} ]]; then
+			WATCHLIST+=( "${x}" )
+		fi
+	done
+fi
+
+inotifyd /lakkris/.notify/notifyRouter.sh ${WATCHLIST[@]}

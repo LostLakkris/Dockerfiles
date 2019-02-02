@@ -1,8 +1,8 @@
 FROM linuxserver/nzbget:latest
 EXPOSE 7946
-COPY bin/serf_0.8.1_amd64 /usr/local/bin/serf
-COPY bin/jq_1.6_amd64 /usr/local/bin/jq
-COPY bin/templater /usr/local/bin/templater
+COPY bin/serf_0.8.1_amd64 /usr/sbin/serf
+COPY bin/jq_1.6_amd64 /usr/sbin/jq
+COPY bin/templater /usr/sbin/templater
 ENV LAKKRIS_SERVICE="nzbget" \
     LAKKRIS_ICON="plugins/images/tabs/nzbget.png" \
     LAKKRIS_PORT="6789" \

@@ -1,0 +1,91 @@
+version: '2.4'
+
+networks:
+  testing:
+
+services:
+  serf:
+    build:
+      context: .
+      dockerfile: serf.amd64
+    networks:
+    - testing
+  nginx:
+    image: jwilder/nginx-proxy
+    restart: unless-stopped
+    ports:
+    - "80:80"
+    - "443:443"
+    volumes:
+    - "/etc/localtime:/etc/localtime:ro"
+    - "/var/run/docker.sock:/tmp/docker.sock:ro"
+    environment:
+      DEFAULT_HOST: "organizr"
+    networks:
+    - testing
+  organizr:
+    build:
+      context: .
+      dockerfile: organizr-v2.amd64
+    depends_on:
+    - nginx
+    - serf
+    environment:
+      VIRTUAL_HOST: "organizr"
+      VIRTUAL_PORT: "80"
+    networks:
+    - testing
+  nzbget:
+    build:
+      context: .
+      dockerfile: nzbget.amd64
+    depends_on:
+    - organizr
+    - serf
+    networks:
+    - testing
+  nzbhydra:
+    build:
+      context: .
+      dockerfile: nzbhydra.amd64
+    depends_on:
+    - organizr
+    - serf
+    networks:
+    - testing
+  sonarr:
+    build:
+      context: .
+      dockerfile: sonarr.amd64
+    depends_on:
+    - organizr
+    - serf
+    networks:
+    - testing
+  radarr:
+    build:
+      context: .
+      dockerfile: radarr.amd64
+    depends_on:
+    - organizr
+    - serf
+    networks:
+    - testing
+  lidarr:
+    build:
+      context: .
+      dockerfile: lidarr.amd64
+    depends_on:
+    - organizr
+    - serf
+    networks:
+    - testing
+  lazylibrarian:
+    build:
+      context: .
+      dockerfile: lazylibrarian.amd64
+    depends_on:
+    - organizr
+    - serf
+    networks:
+    - testing

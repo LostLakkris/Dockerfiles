@@ -1,0 +1,10 @@
+#!/bin/bash
+source /tmp/lakkris.env
+jq -n \
+  --arg bind "0.0.0.0:7946" \
+  --arg interface "${LAKKRIS_IFACE}" \
+  '.bind=$bind|.interface=$interface' > /etc/serf/bind.json
+
+jq -n \
+  --arg anchor "${LAKKRIS_ANCHOR:-organizr}" \
+  '{"start_join":[]} | .start_join |= . + [$anchor]' > /etc/serf/join-anchor.json

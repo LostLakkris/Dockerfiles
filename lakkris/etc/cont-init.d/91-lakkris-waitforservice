@@ -1,0 +1,35 @@
+#!/bin/bash
+
+(
+	source /tmp/lakkris.env
+	SERVICE=${LAKKRIS_SERVICE}
+	SCRIPT=${LAKKRIS_SERVICE}
+	case "${LAKKRIS_SERVICE}" in
+		"organizr")
+			SERVICE="nginx"
+			SCRIPT="${LAKKRIS_SERVICE}"
+			;;
+		*)
+			;;
+	esac
+	# Stall a while
+	while [ ! -d /var/run/s6/services ] ; do
+		sleep 1s
+	done
+	sleep 5s
+
+	while [ ! $(s6-svstat -u "/var/run/s6/services/serf") ] ; do
+		sleep 1s
+	done
+	bash /lakkris/.notify/serf-tags.sh
+
+	if [[ -x "/lakkris/.config/${SERVICE}.sh" ]]; then
+		while [[ ! $(s6-svstat -u "/var/run/s6/services/serf") || ! $(s6-svstat -u "/var/run/s6/services/${SERVICE}") ]] ; do
+			sleep 1s
+		done
+		bash "/lakkris/.config/${SCRIPT}.sh"
+	fi
+	if [ $(s6-svstat -u "/var/run/s6/services/inotifyd") ] ; then
+		s6-svc -r "/var/run/s6/services/inotifyd"
+	fi
+)&
