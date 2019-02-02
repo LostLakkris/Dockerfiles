@@ -4,6 +4,9 @@ CONFIG_FILE="/config/nzbget.conf"
 while [[ ! -e "${CONFIG_FILE}" ]]; do
 	sleep 1s
 done
+while [[ $(curl -fsS localhost:${LAKKRIS_PORT:-6789} &>/dev/null) -ne 0 ]]; do
+        sleep 1s
+done
 
 # TODO: use a hash to generate a random-feeling but repeatable password
 LAKKRIS_USERNAME="${LAKKRIS_SERVERNAME}"

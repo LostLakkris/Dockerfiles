@@ -30,6 +30,7 @@
 	while [[ ! $(s6-svstat -u "/var/run/s6/services/serf") || ! $(s6-svstat -u "/var/run/s6/services/${SERVICE}") ]] ; do
 		sleep 1s
 	done
+	sleep 5s
 	if [[ -x "/lakkris/.config/${SCRIPT}.sh" ]]; then
 		bash "/lakkris/.config/${SCRIPT}.sh"
 	fi

@@ -4,6 +4,9 @@ CONFIG_FILE="/config/nginx/site-confs/default"
 while [[ ! -e "${CONFIG_FILE}" ]]; do
 	sleep 1s
 done
+while [[ $(curl -fsS localhost:${LAKKRIS_PORT:-80} &>/dev/null) -ne 0 ]]; do
+        sleep 1s
+done
 
 if [[ ! -d /config/nginx/lakkris ]]; then
 	mkdir /config/nginx/lakkris
