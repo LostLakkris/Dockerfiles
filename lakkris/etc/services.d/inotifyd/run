@@ -9,4 +9,6 @@ if [[ -e "/lakkris/.notify/map.${LAKKRIS_SERVICE}" ]]; then
 	done
 fi
 
-inotifyd /lakkris/.notify/notifyRouter.sh ${WATCHLIST[@]}
+if [[ ${#WATCHLIST[@]} -gt 0 ]]; then
+	inotifyd /lakkris/.notify/notifyRouter.sh ${WATCHLIST[@]}
+fi

@@ -1,14 +1,29 @@
 #!/bin/bash
 source /tmp/lakkris.env
+if [[ -z "${BIND}" && -e /sbin/ip ]]; then
+	BIND=$(/sbin/ip addr show ${LAKKRIS_IFACE} | awk '/inet/{print $2}' | cut -d'/' -f1)
+fi
+if [[ -z "${BIND}" && -e /bin/networkctl ]]; then
+	BIND=$(/bin/networkctl status ${LAKKRIS_IFACE} | awk '$1 ~ "Address"{print $2}')
+fi
+if [[ -z "${BIND}" ]]; then
+	BIND=$(hostname -i)
+fi
 jq -n \
-  --arg bind "0.0.0.0:7946" \
+  --arg bind "${BIND}:7946" \
   --arg interface "${LAKKRIS_IFACE}" \
-  '.bind=$bind|.interface=$interface' > /etc/serf/bind.json
-
-jq -n \
-  --arg anchor "${LAKKRIS_ANCHOR:-organizr}" \
-  '{"start_join":[]} | .start_join |= . + [$anchor]' > /etc/serf/join-anchor.json
+  '.bind=$bind|.profile="wan"|.snapshot_path="/config/serf"|.rejoin_after_leave=true' > /etc/serf/bind.json
+#  '.bind=$bind|.interface=$interface|.profile="wan"|.snapshot_path="/config/serf"|.rejoin_after_leave=true' > /etc/serf/bind.json
 
 jq -n \
   --arg handler "${LAKKRIS_HANDLER:-'/etc/serf/event_handler.sh'}" \
   '{"event_handlers":[]} | .event_handlers |= . + [$handler]' > /etc/serf/handler.json
+
+#jq -n \
+#  --arg anchor "${LAKKRIS_ANCHOR:-organizr}" \
+#  '{"start_join":[]} | .start_join |= . + [$anchor]' > /etc/serf/join_anchor.json
+
+jq -n \
+  --arg mdns "${LAKKRIS_MDNS:-lakkris}" \
+  '.discover=$mdns' > /etc/serf/join_mdns.json
+

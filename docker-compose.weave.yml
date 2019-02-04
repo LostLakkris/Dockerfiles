@@ -1,0 +1,100 @@
+version: '2.4'
+
+#networks:
+#  testing:
+
+services:
+  serf:
+    build:
+      context: .
+      dockerfile: serf.amd64
+    dns: 172.17.0.1
+    dns_search: weave.local
+    network_mode: bridge
+  nginx:
+    image: jwilder/nginx-proxy
+    restart: unless-stopped
+    ports:
+    - "80:80"
+    - "443:443"
+    volumes:
+    - "/etc/localtime:/etc/localtime:ro"
+    - "/var/run/docker.sock:/tmp/docker.sock:ro"
+    environment:
+      DEFAULT_HOST: "organizr"
+    dns: 172.17.0.1
+    dns_search: weave.local
+    network_mode: bridge
+  organizr:
+    build:
+      context: .
+      dockerfile: organizr-v2.amd64
+    depends_on:
+    - nginx
+    - serf
+    environment:
+      VIRTUAL_HOST: "organizr"
+      VIRTUAL_PORT: "80"
+    dns: 172.17.0.1
+    dns_search: weave.local
+    network_mode: bridge
+  nzbget:
+    build:
+      context: .
+      dockerfile: nzbget.amd64
+    depends_on:
+    - organizr
+    - serf
+    dns: 172.17.0.1
+    dns_search: weave.local
+    network_mode: bridge
+  nzbhydra:
+    build:
+      context: .
+      dockerfile: nzbhydra.amd64
+    depends_on:
+    - organizr
+    - serf
+    dns: 172.17.0.1
+    dns_search: weave.local
+    network_mode: bridge
+  sonarr:
+    build:
+      context: .
+      dockerfile: sonarr.amd64
+    depends_on:
+    - organizr
+    - serf
+    dns: 172.17.0.1
+    dns_search: weave.local
+    network_mode: bridge
+  radarr:
+    build:
+      context: .
+      dockerfile: radarr.amd64
+    depends_on:
+    - organizr
+    - serf
+    dns: 172.17.0.1
+    dns_search: weave.local
+    network_mode: bridge
+  lidarr:
+    build:
+      context: .
+      dockerfile: lidarr.amd64
+    depends_on:
+    - organizr
+    - serf
+    dns: 172.17.0.1
+    dns_search: weave.local
+    network_mode: bridge
+  lazylibrarian:
+    build:
+      context: .
+      dockerfile: lazylibrarian.amd64
+    depends_on:
+    - organizr
+    - serf
+    dns: 172.17.0.1
+    dns_search: weave.local
+    network_mode: bridge
