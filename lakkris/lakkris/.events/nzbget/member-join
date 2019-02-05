@@ -6,6 +6,9 @@ DATA_ROOT="/downloads/completed"
 if [[ ! -e ${CONFIG_FILE} ]]; then
 	exit 0
 fi
+while ! nc -z 127.0.0.1 ${LAKKRIS_PORT} ; do
+	sleep 1s
+done
 
 HASH_START=$(md5sum ${CONFIG_FILE} | awk '{print $1}')
 # TODO: Toggle-able scope to servername
@@ -38,6 +41,7 @@ for SERVICE_DATA in ${SERVICES[@]}; do
 	fi
 done
 HASH_END=$(md5sum ${CONFIG_FILE} | awk '{print $1}')
-if [[ ("${HASH_START}" != "${HASH_END}") && $(s6-svstat -u "/var/run/s6/services/${LAKKRIS_SERVICE}") ]]; then
+s6-svstat -u "/var/run/s6/services/${LAKKRIS_SERVICE}"
+if [[ $? -eq 0 && ("${HASH_START}" != "${HASH_END}") ]]; then
 	s6-svc -h "/var/run/s6/services/${LAKKRIS_SERVICE}"
 fi

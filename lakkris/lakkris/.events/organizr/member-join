@@ -5,6 +5,9 @@ LAKKRIS_FILE="/config/nginx/lakkris.conf"
 while [[ ! -e "${CONFIG_FILE}" ]]; do
 	exit 0
 done
+while ! nc -z 127.0.0.1 ${LAKKRIS_PORT} ; do
+	sleep 1s
+done
 
 if [[ ! -d /config/nginx/lakkris ]]; then
 	mkdir /config/nginx/lakkris
@@ -28,7 +31,7 @@ for SERVICE_DATA in ${SERVICES[@]}; do
         SERVERNAME=$(echo "${SERVICE_DATA}" | jq -c --raw-output '.tags.LAKKRIS_SERVERNAME')
         SERVICE_NAME=$(echo "${SERVICE_DATA}" | jq -c --raw-output '.tags.LAKKRIS_SERVICE')
         WEBROOT=$(echo "${SERVICE_DATA}" | jq -c --raw-output '.tags.LAKKRIS_WEBROOT')
-        if [[ (-n "${WEBROOT}" || "${SERVICE_NAME}" == "nzbget") && -e /lakkris/tmpl/nginx/${SERVICE_NAME}.conf ]]; then
+        if [[ ( (-n "${WEBROOT}" && "${WEBROOT}" != "null") || "${SERVICE_NAME}" == "nzbget" ) && -e /lakkris/tmpl/nginx/${SERVICE_NAME}.conf ]]; then
                 echo "${SERVICE_DATA}" | jq -c --raw-output '.tags | to_entries[] | (.key | ascii_upcase) + "=" + .value' > /tmp/service.env
                 templater /lakkris/tmpl/nginx/${SERVICE_NAME}.conf -f /tmp/service.env -s > "/config/nginx/lakkris/100-${SERVERNAME}-${SERVICE_NAME}.conf"
         fi
@@ -41,7 +44,7 @@ cat $(ls /config/nginx/lakkris/* | sort -n) > ${LAKKRIS_FILE}
 
 CONFIG_MD5_END=$(md5sum ${CONFIG_FILE} ${LAKKRIS_FILE} | awk '{print $1}')
 
-if [[ "${CONFIG_MD5_START}" != "${CONFIG_MD5_END}" && $(s6-svstat -u "/var/run/s6/services/nginx") ]]; then
+s6-svstat -u "/var/run/s6/services/nginx"
+if [[ $? -eq 0 && "${CONFIG_MD5_START}" != "${CONFIG_MD5_END}" ]]; then
 	s6-svc -h "/var/run/s6/services/nginx"
 fi
-

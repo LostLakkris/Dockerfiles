@@ -1,7 +1,7 @@
 #!/usr/bin/with-contenv bash
 WATCHLIST=()
-if [[ -e "/lakkris/.notify/map.${LAKKRIS_SERVICE}" ]]; then
-	POTENTIALLIST=( $(cut -d ',' -f1 "/lakkris/.notify/map.${LAKKRIS_SERVICE}") )
+if [[ -e "/tmp/lakkris.notify" ]]; then
+	POTENTIALLIST=( $(cut -d ',' -f1 "/tmp/lakkris.notify") )
 	for x in ${POTENTIALLIST[@]}; do
 		if [[ -e ${x%:*} ]]; then
 			WATCHLIST+=( "${x}" )
@@ -10,5 +10,5 @@ if [[ -e "/lakkris/.notify/map.${LAKKRIS_SERVICE}" ]]; then
 fi
 
 if [[ ${#WATCHLIST[@]} -gt 0 ]]; then
-	inotifyd /lakkris/.notify/notifyRouter.sh ${WATCHLIST[@]}
+	inotifyd /lakkris/.notify/router.sh ${WATCHLIST[@]}
 fi

@@ -4,8 +4,8 @@ CONFIG_FILE="/config/nzbget.conf"
 while [[ ! -e "${CONFIG_FILE}" ]]; do
 	sleep 1s
 done
-while [[ $(curl -fsS localhost:${LAKKRIS_PORT:-6789} &>/dev/null) -ne 0 ]]; do
-        sleep 1s
+while ! nc -z 127.0.0.1 ${LAKKRIS_PORT} ; do
+	sleep 1s
 done
 
 # TODO: use a hash to generate a random-feeling but repeatable password
@@ -22,7 +22,7 @@ for CONFIG_STRING in ${CONFIG_STRINGS[@]}; do
 done
 CONFIG_MD5_END=$(md5sum ${CONFIG_FILE} | awk '{print $1}')
 
-if [[ "${CONFIG_MD5_START}" != "${CONFIG_MD5_END}" && $(s6-svstat -u "/var/run/s6/services/${LAKKRIS_SERVICE}") ]]; then
+if [[ $(s6-svstat -u "/var/run/s6/services/${LAKKRIS_SERVICE}") == "true" && "${CONFIG_MD5_START}" != "${CONFIG_MD5_END}" ]]; then
 	s6-svc -h "/var/run/s6/services/${LAKKRIS_SERVICE}"
 fi
 

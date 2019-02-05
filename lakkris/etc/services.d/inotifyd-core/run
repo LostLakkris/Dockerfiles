@@ -1,0 +1,2 @@
+#!/usr/bin/with-contenv bash
+inotifyd /lakkris/.notify/router.sh /tmp/lakkris.notify:c

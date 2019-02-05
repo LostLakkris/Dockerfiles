@@ -9,6 +9,7 @@ fi
 if [[ -z "${BIND}" ]]; then
 	BIND=$(hostname -i)
 fi
+
 jq -n \
   --arg bind "${BIND}:7946" \
   --arg interface "${LAKKRIS_IFACE}" \
@@ -17,7 +18,7 @@ jq -n \
 
 jq -n \
   --arg handler "${LAKKRIS_HANDLER:-'/etc/serf/event_handler.sh'}" \
-  '{"event_handlers":[]} | .event_handlers |= . + [$handler]' > /etc/serf/handler.json
+  '{"event_handlers":[]} | .event_handlers |= . + [$handler]' > /etc/serf/event_handler.json
 
 #jq -n \
 #  --arg anchor "${LAKKRIS_ANCHOR:-organizr}" \
@@ -25,5 +26,5 @@ jq -n \
 
 jq -n \
   --arg mdns "${LAKKRIS_MDNS:-lakkris}" \
-  '.discover=$mdns' > /etc/serf/join_mdns.json
+  '.discover=$mdns' > /etc/serf/discover.json
 
