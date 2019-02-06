@@ -7,8 +7,6 @@ image:
 environment:
   matrix:
     - ARCH: amd64
-  test:
-    secure: LVHF4wocTKtvgl8JnIOO3Q==
   docker_user:
     secure: TJfOg4mQbXKqm629vAB2Gw==
   docker_password:
