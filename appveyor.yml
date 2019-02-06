@@ -31,5 +31,5 @@ deploy_script:
 - sh: >-
     for x in $(ls -1 *.amd64); do
       echo ${x}
-      docker push "lostlakkris/${x%.*}:latest"
+      docker push "lostlakkris/${x%.*}"
     done
