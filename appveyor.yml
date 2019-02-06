@@ -11,7 +11,8 @@ environment:
     secure: LVHF4wocTKtvgl8JnIOO3Q==
   docker_user:
     secure: TJfOg4mQbXKqm629vAB2Gw==
-
+  docker_password:
+    secure: xeG9nOJrO9D//Wv8/gvLPg==
 
 skip_commits:
   files:
@@ -26,8 +27,7 @@ build_script:
 
 #test_script:
 deploy_script:
-- sh: echo ${docker_user} ${test}
-- sh: docker login -u ${docker_user} -p ${test}
+- sh: docker login -u ${docker_user} -p ${docker_password}
 - sh: >-
     for x in $(ls -1 *.amd64); do
       echo ${x}
