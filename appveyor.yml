@@ -22,7 +22,7 @@ build_script:
 - sh: >-
     for x in $(ls -1 *.amd64); do
       echo ${x}
-      docker build --no-cache -t "lostlakkris/${x%.*}:latest" -t "lostlakkris/${x%.*}:${ARCH}" -f ${x} .
+      docker build --pull --no-cache -t "lostlakkris/${x%.*}:latest" -t "lostlakkris/${x%.*}:${ARCH}" -f ${x} .
     done
 
 #test_script:
