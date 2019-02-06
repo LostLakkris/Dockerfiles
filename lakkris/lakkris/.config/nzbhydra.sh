@@ -26,11 +26,11 @@ fi
 # Confirming the webroot is still modified
 LAKKRIS_WEBROOT_FILE=$(awk '/urlBase: /{print $NF}' ${CONFIG_FILE} | tr -d '"/')
 if [[ "${LAKKRIS_WEBROOT}" == "${LAKKRIS_WEBROOT_FILE}" ]]; then
-	UPDATE="export LAKKRIS_WEBROOT=\"${LAKKRIS_WEBROOT}\""
+	UPDATE="export LAKKRIS_WEBROOT=${LAKKRIS_WEBROOT}"
 	grep -q "${UPDATE%=*}" /tmp/lakkris.env && sed -i "s@${UPDATE%=*}.*@${UPDATE}@" /tmp/lakkris.env || echo "${UPDATE}" >> /tmp/lakkris.env
 fi
 
 LAKKRIS_APITOKEN=$(awk '/apiKey: /{print $NF}' ${CONFIG_FILE} | tr -d '"')
-UPDATE="export LAKKRIS_APITOKEN=\"${LAKKRIS_APITOKEN}\""
+UPDATE="export LAKKRIS_APITOKEN=${LAKKRIS_APITOKEN}"
 grep -q "${UPDATE%=*}" /tmp/lakkris.env && sed -i "s@${UPDATE%=*}.*@${UPDATE}@" /tmp/lakkris.env || echo "${UPDATE}" >> /tmp/lakkris.env
 

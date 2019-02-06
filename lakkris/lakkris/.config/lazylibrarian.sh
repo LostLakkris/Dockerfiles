@@ -19,7 +19,7 @@ if [[ $(s6-svstat -u "/var/run/s6/services/${LAKKRIS_SERVICE}") == "true" && "${
 	s6-svc -h "/var/run/s6/services/${LAKKRIS_SERVICE}"
 fi
 
-UPDATE="export LAKKRIS_WEBROOT=\"${LAKKRIS_WEBROOT}\""
+UPDATE="export LAKKRIS_WEBROOT=${LAKKRIS_WEBROOT}"
 grep -q "${UPDATE%=*}" /tmp/lakkris.env && sed -i "s@${UPDATE%=*}.*@${UPDATE}@" /tmp/lakkris.env || echo "${UPDATE}" >> /tmp/lakkris.env
 
 #LAKKRIS_APITOKEN=$(awk '/apiKey: /{print $NF}' ${CONFIG_FILE} | tr -d '"')

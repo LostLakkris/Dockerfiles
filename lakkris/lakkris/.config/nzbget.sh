@@ -25,7 +25,7 @@ if [[ $(s6-svstat -u "/var/run/s6/services/${LAKKRIS_SERVICE}") == "true" && "${
 fi
 
 ## Update lakkris.env
-UPDATE="export LAKKRIS_USERNAME=\"${LAKKRIS_USERNAME}\""
+UPDATE="export LAKKRIS_USERNAME=${LAKKRIS_USERNAME}"
 grep -q "${UPDATE%=*}" /tmp/lakkris.env && sed -i "s@${UPDATE%=*}.*@${UPDATE}@" /tmp/lakkris.env || echo "${UPDATE}" >> /tmp/lakkris.env
-UPDATE="export LAKKRIS_PASSWORD=\"${LAKKRIS_PASSWORD}\""
+UPDATE="export LAKKRIS_PASSWORD=${LAKKRIS_PASSWORD}"
 grep -q "${UPDATE%=*}" /tmp/lakkris.env && sed -i "s@${UPDATE%=*}.*@${UPDATE}@" /tmp/lakkris.env || echo "${UPDATE}" >> /tmp/lakkris.env
