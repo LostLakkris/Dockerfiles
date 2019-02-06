@@ -26,7 +26,7 @@ services:
   organizr:
     build:
       context: .
-      dockerfile: organizr-v2.amd64
+      dockerfile: organizr.amd64
     depends_on:
     - nginx
     - serf
