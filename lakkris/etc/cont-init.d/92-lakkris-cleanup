@@ -1,0 +1,16 @@
+#!/bin/bash
+source /tmp/lakkris.env
+
+case "${LAKKRIS_SERVICE}" in
+	"organizr")
+		if [[ -d /config/nginx/lakkris ]]; then
+			rm -f /config/nginx/lakkris/100-*
+		fi
+		if [[ -e /config/nginx/lakkris.conf ]]; then
+			rm -f /config/nginx/lakkris.conf
+		fi
+		;;
+	*)
+		echo "No prestart cleanup overrides for ${LAKKRIS_SERVICE}"
+		;;
+esac

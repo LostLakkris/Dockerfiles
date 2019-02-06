@@ -5,9 +5,8 @@ LAKKRIS_FILE="/config/nginx/lakkris.conf"
 while [[ ! -e "${CONFIG_FILE}" ]]; do
 	exit 0
 done
-while ! nc -z 127.0.0.1 ${LAKKRIS_PORT} ; do
-	sleep 1s
-done
+
+s6-svwait -u "/var/run/s6/services/nginx" "/var/run/s6/services/php-fpm"
 
 if [[ ! -d /config/nginx/lakkris ]]; then
 	mkdir /config/nginx/lakkris

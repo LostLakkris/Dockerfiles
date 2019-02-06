@@ -30,6 +30,8 @@ services:
     depends_on:
     - nginx
     - serf
+    volumes:
+    - "./config/organizr:/config"
     environment:
       VIRTUAL_HOST: "organizr"
       VIRTUAL_PORT: "80"
@@ -42,6 +44,8 @@ services:
     depends_on:
     - organizr
     - serf
+    volumes:
+    - "./config/nzbget:/config"
     networks:
     - testing
   nzbhydra:
@@ -51,6 +55,8 @@ services:
     depends_on:
     - organizr
     - serf
+    volumes:
+    - "./config/nzbhydra:/config"
     networks:
     - testing
   sonarr:
@@ -60,6 +66,8 @@ services:
     depends_on:
     - organizr
     - serf
+    volumes:
+    - "./config/sonarr:/config"
     networks:
     - testing
   radarr:
@@ -69,6 +77,8 @@ services:
     depends_on:
     - organizr
     - serf
+    volumes:
+    - "./config/radarr:/config"
     networks:
     - testing
   lidarr:
@@ -78,6 +88,8 @@ services:
     depends_on:
     - organizr
     - serf
+    volumes:
+    - "./config/lidarr:/config"
     networks:
     - testing
   lazylibrarian:
@@ -87,5 +99,7 @@ services:
     depends_on:
     - organizr
     - serf
+    volumes:
+    - "./config/lazylibrarian:/config"
     networks:
     - testing

@@ -32,6 +32,8 @@ services:
     depends_on:
     - nginx
     - serf
+    volumes:
+    - "./config/organizr:/config"
     environment:
       VIRTUAL_HOST: "organizr"
       VIRTUAL_PORT: "80"
@@ -45,6 +47,8 @@ services:
     depends_on:
     - organizr
     - serf
+    volumes:
+    - "./config/nzbget:/config"
     dns: 172.17.0.1
     dns_search: weave.local
     network_mode: bridge
@@ -55,6 +59,8 @@ services:
     depends_on:
     - organizr
     - serf
+    volumes:
+    - "./config/nzbhydra:/config"
     dns: 172.17.0.1
     dns_search: weave.local
     network_mode: bridge
@@ -65,6 +71,8 @@ services:
     depends_on:
     - organizr
     - serf
+    volumes:
+    - "./config/sonarr:/config"
     dns: 172.17.0.1
     dns_search: weave.local
     network_mode: bridge
@@ -75,6 +83,8 @@ services:
     depends_on:
     - organizr
     - serf
+    volumes:
+    - "./config/radarr:/config"
     dns: 172.17.0.1
     dns_search: weave.local
     network_mode: bridge
@@ -85,6 +95,8 @@ services:
     depends_on:
     - organizr
     - serf
+    volumes:
+    - "./config/lidarr:/config"
     dns: 172.17.0.1
     dns_search: weave.local
     network_mode: bridge
@@ -95,6 +107,8 @@ services:
     depends_on:
     - organizr
     - serf
+    volumes:
+    - "./config/lazylibrarian:/config"
     dns: 172.17.0.1
     dns_search: weave.local
     network_mode: bridge
