@@ -1,0 +1,31 @@
+---
+version: 0.0.{build}
+
+image:
+- Ubuntu1804
+
+environment:
+  matrix:
+    - ARCH: amd64
+  test:
+    secure: LVHF4wocTKtvgl8JnIOO3Q==
+
+skip_commits:
+  files:
+    - '*.md'
+
+build_script:
+- sh: >-
+    for x in $(ls -1 *.amd64); do
+      echo ${x}
+      docker build --no-cache -t "lostlakkris/${x%.*}:latest" -t "lostlakkris/${x%.*}:${ARCH}" -f ${x} .
+    done
+
+#test_script:
+deploy_script:
+- sh: docker login -u $test -p $test
+- sh: >-
+    for x in $(ls -1 *.amd64); do
+      echo ${x}
+      docker push "lostlakkris/${x%.*}:latest"
+    done
