@@ -4,9 +4,7 @@ CONFIG_FILE="/config/nzbget.conf"
 while [[ ! -e "${CONFIG_FILE}" ]]; do
 	sleep 1s
 done
-while ! nc -z 127.0.0.1 ${LAKKRIS_PORT} ; do
-	sleep 1s
-done
+s6-svwait -u "/var/run/s6/services/${LAKKRIS_SERVICE}"
 
 # TODO: use a hash to generate a random-feeling but repeatable password
 LAKKRIS_USERNAME="${LAKKRIS_SERVERNAME}"

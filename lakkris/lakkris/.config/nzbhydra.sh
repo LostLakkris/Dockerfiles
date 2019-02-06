@@ -5,6 +5,8 @@ while [[ ! -e "${CONFIG_FILE}" ]]; do
 	sleep 1s
 done
 
+s6-svwait -u "/var/run/s6/services/${LAKKRIS_SERVICE}"
+
 if [[ -z "${LAKKRIS_WEBROOT}" ]]; then
 	LAKKRIS_WEBROOT="${LAKKRIS_SERVERNAME}-${LAKKRIS_SERVICE}"
 fi

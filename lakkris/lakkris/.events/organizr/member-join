@@ -25,26 +25,28 @@ grep -q -x -F "${CONTENT}" ${CONFIG_FILE} || sed -i "s#^}#${CONTENT}\n}#g" ${CON
 
 SERVICES=( $(serf members -format=json | jq -c --raw-output '.members[]') )
 if [[ ${#SERVICES[@]} -gt 0 && -e /config/nginx/lakkris/000-authblock.conf ]]; then
-        rm /config/nginx/lakkris/100-*.conf
+	rm /config/nginx/lakkris/100-*.conf
 fi
 for SERVICE_DATA in ${SERVICES[@]}; do
-        SERVERNAME=$(echo "${SERVICE_DATA}" | jq -c --raw-output '.tags.LAKKRIS_SERVERNAME')
-        SERVICE_NAME=$(echo "${SERVICE_DATA}" | jq -c --raw-output '.tags.LAKKRIS_SERVICE')
-        WEBROOT=$(echo "${SERVICE_DATA}" | jq -c --raw-output '.tags.LAKKRIS_WEBROOT')
-        if [[ ( (-n "${WEBROOT}" && "${WEBROOT}" != "null") || "${SERVICE_NAME}" == "nzbget" ) && -e /lakkris/tmpl/nginx/${SERVICE_NAME}.conf ]]; then
-                echo "${SERVICE_DATA}" | jq -c --raw-output '.tags | to_entries[] | (.key | ascii_upcase) + "=" + .value' > /tmp/service.env
-                templater /lakkris/tmpl/nginx/${SERVICE_NAME}.conf -f /tmp/service.env -s > "/config/nginx/lakkris/100-${SERVERNAME}-${SERVICE_NAME}.conf"
-        fi
+	SERVERNAME=$(echo "${SERVICE_DATA}" | jq -c --raw-output '.tags.LAKKRIS_SERVERNAME')
+	SERVICE_NAME=$(echo "${SERVICE_DATA}" | jq -c --raw-output '.tags.LAKKRIS_SERVICE')
+	WEBROOT=$(echo "${SERVICE_DATA}" | jq -c --raw-output '.tags.LAKKRIS_WEBROOT')
+	if [[ -e /lakkris/tmpl/nginx/${SERVICE_NAME}.conf ]]; then
+		echo "${SERVICE_DATA}" | jq -c --raw-output '.tags | to_entries[] | (.key | ascii_upcase) + "=" + .value' > /tmp/service.env
+		if [[ "${SERVICE_NAME}" == "nzbget" || $(grep '^LAKKRIS_WEBROOT=' /tmp/service.env | wc -l) -gt 0 ]]; then
+			templater /lakkris/tmpl/nginx/${SERVICE_NAME}.conf -f /tmp/service.env -s > "/config/nginx/lakkris/100-${SERVERNAME}-${SERVICE_NAME}.conf"
+		fi
+		rm /tmp/service.env
+	fi
 done
 if [[ -e /tmp/service.env ]]; then
-        rm /tmp/service.env
+	rm /tmp/service.env
 fi
 
 cat $(ls /config/nginx/lakkris/* | sort -n) > ${LAKKRIS_FILE}
 
 CONFIG_MD5_END=$(md5sum ${CONFIG_FILE} ${LAKKRIS_FILE} | awk '{print $1}')
 
-s6-svstat -u "/var/run/s6/services/nginx"
-if [[ $? -eq 0 && "${CONFIG_MD5_START}" != "${CONFIG_MD5_END}" ]]; then
+if [[ $(s6-svstat -u "/var/run/s6/services/nginx") == "true" && "${CONFIG_MD5_START}" != "${CONFIG_MD5_END}" ]]; then
 	s6-svc -h "/var/run/s6/services/nginx"
 fi

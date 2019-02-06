@@ -46,4 +46,5 @@
 	if [[ -x "/lakkris/.config/${SCRIPT}.sh" ]]; then
 		bash "/lakkris/.config/${SCRIPT}.sh"
 	fi
+	bash /lakkris/.notify/serf-tags.sh
 )&

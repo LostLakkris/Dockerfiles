@@ -41,7 +41,7 @@ for SERVICE_DATA in ${SERVICES[@]}; do
 	fi
 done
 HASH_END=$(md5sum ${CONFIG_FILE} | awk '{print $1}')
-s6-svstat -u "/var/run/s6/services/${LAKKRIS_SERVICE}"
-if [[ $? -eq 0 && ("${HASH_START}" != "${HASH_END}") ]]; then
+
+if [[ $(s6-svstat -u "/var/run/s6/services/${LAKKRIS_SERVICE}") == "true" && ("${HASH_START}" != "${HASH_END}") ]]; then
 	s6-svc -h "/var/run/s6/services/${LAKKRIS_SERVICE}"
 fi
