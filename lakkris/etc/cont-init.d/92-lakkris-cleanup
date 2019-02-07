@@ -4,10 +4,10 @@ source /tmp/lakkris.env
 case "${LAKKRIS_SERVICE}" in
 	"organizr")
 		if [[ -d /config/nginx/lakkris ]]; then
-			rm -f /config/nginx/lakkris/100-*
+			rm -f /config/nginx/lakkris/*
 		fi
-		if [[ -e /config/nginx/lakkris.conf ]]; then
-			rm -f /config/nginx/lakkris.conf
+		if [[ -d /config/nginx/tmp ]]; then
+			rm -f /config/nginx/tmp/*
 		fi
 		;;
 	*)

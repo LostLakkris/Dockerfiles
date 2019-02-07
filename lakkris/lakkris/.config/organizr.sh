@@ -10,13 +10,11 @@ s6-svwait -u "/var/run/s6/services/nginx" "/var/run/s6/services/php-fpm"
 if [[ ! -d /config/nginx/lakkris ]]; then
 	mkdir /config/nginx/lakkris
 fi
-
-if [[ ! -e /config/nginx/lakkris/000-authblock.conf ]]; then
-	cp /lakkris/tmpl/nginx/000-authblock.conf /config/nginx/lakkris/000-authblock.conf
+if [[ ! -d /config/nginx/tmp ]]; then
+	mkdir /config/nginx/tmp
 fi
-touch /config/nginx/lakkris.conf
 
-CONTENT="include /config/nginx/lakkris.conf;"
+CONTENT="include /config/nginx/lakkris/*.conf;"
 
 CONFIG_MD5_START=$(md5sum ${CONFIG_FILE} | awk '{print $1}')
 grep -q -x -F "${CONTENT}" ${CONFIG_FILE} || sed -i "s#^}#${CONTENT}\n}#g" ${CONFIG_FILE}
