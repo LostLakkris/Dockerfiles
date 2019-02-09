@@ -112,3 +112,27 @@ services:
     dns: 172.17.0.1
     dns_search: weave.local
     network_mode: bridge
+  plex:
+    build:
+      context: .
+      dockerfile: plex.amd64
+    depends_on:
+    - organizr
+    - serf
+    volumes:
+    - "./config/plex:/config"
+    dns: 172.17.0.1
+    dns_search: weave.local
+    network_mode: bridge
+  tautulli:
+    build:
+      context: .
+      dockerfile: tautulli.amd64
+    depends_on:
+    - organizr
+    - serf
+    volumes:
+    - "./config/tautulli:/config"
+    dns: 172.17.0.1
+    dns_search: weave.local
+    network_mode: bridge

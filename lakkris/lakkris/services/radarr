@@ -1,0 +1,2 @@
+/var/run/s6/services/radarr
+/var/run/s6/services/serf

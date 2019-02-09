@@ -1,0 +1,27 @@
+#!/bin/bash
+(
+	source /tmp/lakkris.env
+	if [[ -e "/lakkris/services/${LAKKRIS_SERVICE}" && -x "/lakkris/start-post/${LAKKRIS_SERVICE}.sh" ]]; then
+		# Wait for the service directories to exist
+		SVCS=( $(cat /lakkris/services/${LAKKRIS_SERVICE}) )
+		while [[ ${#SVCS[@]} -gt 0 ]]; do
+			sleep 1s
+			if [[ -e ${SVCS[-1]} ]]; then
+				unset 'SVCS[-1]'
+			fi
+		done
+
+		# Wait for all services in the list to be considered running
+		s6-svwait -u $(cat /lakkris/services/${LAKKRIS_SERVICE})
+
+		# If a config file was defined, wait for it to exist
+		if [[ -n "${LAKKRIS_CONFIGFILE}" ]]; then
+			while [[ ! -e "${LAKKRIS_CONFIGFILE}" ]]; do
+				sleep 1s
+			done
+		fi
+
+		# Execute the post-start script
+		bash /lakkris/start-post/${LAKKRIS_SERVICE}.sh
+	fi
+)&

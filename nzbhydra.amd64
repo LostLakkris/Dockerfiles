@@ -9,5 +9,6 @@ ENV LAKKRIS_SERVICE="nzbhydra" \
     LAKKRIS_ICON="plugins/images/tabs/hydra2.png" \
     LAKKRIS_CONTENT="nzb" \
     LAKKRIS_PORT="5076" \
+    LAKKRIS_CONFIGFILE="/config/nzbhydra.yml" \
     LAKKRIS_SERVERNAME="lazylakkris"
 COPY lakkris/ /

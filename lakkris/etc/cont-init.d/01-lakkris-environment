@@ -11,6 +11,6 @@ fi
 	echo "export LAKKRIS_HOSTNAME=${HOSTNAME}";
 	echo "export LAKKRIS_IFACE=${LAKKRIS_IFACE}";
 	echo "export LAKKRIS_START=$(date +%s)"
-) | grep 'LAKKRIS' > /tmp/lakkris.env
+) | grep 'LAKKRIS' | sort > /tmp/lakkris.env
 
-echo "/tmp/lakkris.env:c,/lakkris/.notify/serf-tags.sh" > /tmp/lakkris.notify
+touch /tmp/lakkris.notify

@@ -1,0 +1,4 @@
+/var/run/s6/services/cron
+/var/run/s6/services/nginx
+/var/run/s6/services/php-fpm
+/var/run/s6/services/serf

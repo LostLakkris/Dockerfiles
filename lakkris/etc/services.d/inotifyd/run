@@ -1,14 +1,2 @@
 #!/usr/bin/with-contenv bash
-WATCHLIST=()
-if [[ -e "/tmp/lakkris.notify" ]]; then
-	POTENTIALLIST=( $(cut -d ',' -f1 "/tmp/lakkris.notify") )
-	for x in ${POTENTIALLIST[@]}; do
-		if [[ -e ${x%:*} ]]; then
-			WATCHLIST+=( "${x}" )
-		fi
-	done
-fi
-
-if [[ ${#WATCHLIST[@]} -gt 0 ]]; then
-	inotifyd /lakkris/.notify/router.sh ${WATCHLIST[@]}
-fi
+inotifyd /lakkris/handlers/inotifyd.sh $(cat /tmp/lakkris.notify | cut -d',' -f-1)

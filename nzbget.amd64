@@ -7,5 +7,6 @@ COPY bin/templater /usr/sbin/templater
 ENV LAKKRIS_SERVICE="nzbget" \
     LAKKRIS_ICON="plugins/images/tabs/nzbget.png" \
     LAKKRIS_PORT="6789" \
+    LAKKRIS_CONFIGFILE="/config/nzbget.conf" \
     LAKKRIS_SERVERNAME="lazylakkris"
 COPY lakkris/ /

@@ -103,3 +103,25 @@ services:
     - "./config/lazylibrarian:/config"
     networks:
     - testing
+  plex:
+    build:
+      context: .
+      dockerfile: plex.amd64
+    depends_on:
+    - organizr
+    - serf
+    volumes:
+    - "./config/plex:/config"
+    networks:
+    - testing
+  tautulli:
+    build:
+      context: .
+      dockerfile: tautulli.amd64
+    depends_on:
+    - organizr
+    - serf
+    volumes:
+    - "./config/tautulli:/config"
+    networks:
+    - testing

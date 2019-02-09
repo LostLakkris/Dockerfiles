@@ -9,5 +9,6 @@ ENV LAKKRIS_SERVICE="radarr" \
     LAKKRIS_CONTENT="movies" \
     LAKKRIS_ICON="plugins/images/tabs/radarr.png" \
     LAKKRIS_PORT="7878" \
+    LAKKRIS_CONFIGFILE="/config/config.xml" \
     LAKKRIS_SERVERNAME="lazylakkris"
 COPY lakkris/ /

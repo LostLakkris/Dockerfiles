@@ -1,0 +1,20 @@
+#!/bin/bash
+(
+	source /tmp/lakkris.env
+	if [[ -e "/lakkris/services/serf" && -x "/lakkris/start-post/serf.sh" ]]; then
+		# Wait for the service directories to exist
+		SVCS=( $(cat /lakkris/services/serf) )
+		while [[ ${#SVCS[@]} -gt 0 ]]; do
+			sleep 1s
+			if [[ -e ${SVCS[-1]} ]]; then
+				unset 'SVCS[-1]'
+			fi
+		done
+
+		# Wait for all services in the list to be considered running
+		s6-svwait -u $(cat /lakkris/services/serf)
+
+		# Execute the post-start script
+		bash /lakkris/start-post/serf.sh
+	fi
+)&
