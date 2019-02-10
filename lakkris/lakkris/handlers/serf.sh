@@ -10,7 +10,7 @@ fi
 
 if [[ -x "${HANDLER_ROOT}/${SERF_EVENT}" ]]; then
 	(
-		exec 203>> "/tmp/lakkris.lock"
+		exec 203>> "/tmp/lakkris-serf.lock"
 		flock -n -x 203
 		echo "${PAYLOAD}" | exec "${HANDLER_ROOT}/${SERF_EVENT}"
 		flock -u 203
