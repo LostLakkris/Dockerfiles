@@ -6,7 +6,7 @@
 		SVCS=( $(cat /lakkris/services/${LAKKRIS_SERVICE}) )
 		while [[ ${#SVCS[@]} -gt 0 ]]; do
 			sleep 1s
-			if [[ -e ${SVCS[-1]} ]]; then
+			if [[ -d "${SVCS[-1]}" ]]; then
 				unset 'SVCS[-1]'
 			fi
 		done

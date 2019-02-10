@@ -1,5 +1,7 @@
 #!/bin/bash
 source /tmp/lakkris.env
+OIFS=$IFS
+IFS=$'\n'
 #CONFIG_FILE="/config/nzbget.conf"
 CONFIG_FILE=${LAKKRIS_CONFIGFILE}
 DATA_ROOT="/downloads/completed"
@@ -60,3 +62,4 @@ if [[ -e "${CONFIG_FILE}" ]]; then
 	UPDATE="export LAKKRIS_PASSWORD=${LAKKRIS_PASSWORD}"
 	grep -q "${UPDATE%=*}" /tmp/lakkris.env && sed -i "s@${UPDATE%=*}.*@${UPDATE}@" /tmp/lakkris.env || echo "${UPDATE}" >> /tmp/lakkris.env
 fi
+IFS=$OIFS

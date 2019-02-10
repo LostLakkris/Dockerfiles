@@ -1,7 +1,7 @@
 #!/bin/bash
 source /tmp/lakkris.env
 
-while [[ ! -e /var/run/s6/services/inotifyd ]]; do
+while [[ ! -d /var/run/s6/services/inotifyd ]]; do
 	sleep 1s
 done
 

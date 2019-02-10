@@ -1,5 +1,7 @@
 #!/bin/bash
 source /tmp/lakkris.env
+OIFS=$IFS
+IFS=$'\n'
 #CONFIG_FILE="/config/config.xml"
 CONFIG_FILE=${LAKKRIS_CONFIGFILE}
 
@@ -37,3 +39,4 @@ if [[ -e "${CONFIG_FILE}" ]]; then
 	fi
 
 fi
+IFS=$OIFS

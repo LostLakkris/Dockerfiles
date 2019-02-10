@@ -7,6 +7,7 @@ NOTIFY_FILE="/tmp/lakkris.notify"
 if [[ -e "${NOTIFY_FILE}" ]]; then
 	(
 		exec 203>> "/tmp/lakkris.lock"
+		flock -n -x 203
 		RUN_SCRIPT=$(grep "^${object}:${event}," "${NOTIFY_FILE}" | cut -d',' -f2-)
 		if [[ -x "${RUN_SCRIPT}" ]]; then
 			bash "${RUN_SCRIPT}"

@@ -30,9 +30,9 @@ jq -n \
   '.bind=$bind|.profile="wan"|.snapshot_path="/config/serf"|.rejoin_after_leave=true' > /etc/serf/bind.json
 #  '.bind=$bind|.interface=$interface|.profile="wan"|.snapshot_path="/config/serf"|.rejoin_after_leave=true' > /etc/serf/bind.json
 
-if [[ -x "${LAKKRIS_HANDLER:-'/lakkris/handlers/serf.sh'}" ]]; then
+if [[ -x "${LAKKRIS_HANDLER:-/lakkris/handlers/serf.sh}" ]]; then
 jq -n \
-  --arg handler "${LAKKRIS_HANDLER:-'/lakkris/handlers/serf.sh'}" \
+  --arg handler "${LAKKRIS_HANDLER:-/lakkris/handlers/serf.sh}" \
   '{"event_handlers":[]} | .event_handlers |= . + [$handler]' > /etc/serf/event_handler.json
 fi
 
