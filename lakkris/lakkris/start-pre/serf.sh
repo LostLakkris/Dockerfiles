@@ -16,8 +16,11 @@ HASH_START=$(md5sum /etc/serf/* | sort -n | md5sum | awk '{print $1}')
 jq -n \
   --arg bind "${LAKKRIS_IP}:7946" \
   --arg interface "${LAKKRIS_IFACE}" \
-  '.bind=$bind|.profile="wan"|.snapshot_path="/config/serf"|.rejoin_after_leave=true' > /etc/serf/bind.json
+  '.bind=$bind|.profile="wan"' > /etc/serf/bind.json
 #  '.bind=$bind|.interface=$interface|.profile="wan"|.snapshot_path="/config/serf"|.rejoin_after_leave=true' > /etc/serf/bind.json
+
+#jq -n \
+#  '.snapshot_path="/config/serf"|.rejoin_after_leave=true' > /etc/serf/snapshots.json
 
 if [[ -x "${LAKKRIS_HANDLER:-/lakkris/handlers/serf.sh}" ]]; then
 jq -n \
