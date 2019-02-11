@@ -23,9 +23,5 @@
 
 		# Execute the post-start script
 		bash /lakkris/start-post/${LAKKRIS_SERVICE}.sh
-		# Rerun the serf script again incase environment changed
-		if [[ -x /lakkris/start-pre/serf.sh ]]; then
-			bash /lakkris/start-pre/serf.sh
-		fi
 	fi
 )&
