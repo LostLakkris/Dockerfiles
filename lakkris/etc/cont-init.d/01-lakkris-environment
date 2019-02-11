@@ -25,4 +25,4 @@ fi
 	echo "export LAKKRIS_START=$(date +%s)"
 ) | grep 'LAKKRIS' | sort > /tmp/lakkris.env
 
-touch /tmp/lakkris.notify
+#touch /tmp/lakkris.notify

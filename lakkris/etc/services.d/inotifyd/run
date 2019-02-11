@@ -1,5 +1,0 @@
-#!/usr/bin/with-contenv bash
-while [[ $(wc -l /tmp/lakkris.notify) -lt 1 ]]; do
-	sleep 1s
-done
-inotifyd /lakkris/handlers/inotifyd.sh $(cat /tmp/lakkris.notify | cut -d',' -f-1)

@@ -7,15 +7,15 @@ fi
 
 # INOTIFY DATA
 # Anytime lakkris environment has updated, rebuild the tags and rescan the config directory
-NOTIFY=(
-	'/tmp/lakkris.env:c,/lakkris/events-notify/serf.sh'
-	'/tmp/lakkris.env:x,/lakkris/events-notify/serf.sh'
-)
-for entry in ${NOTIFY[@]}; do
-	if ! grep -q "^${entry%,*}" "/tmp/lakkris.notify"; then
-		echo "${entry}" >> /tmp/lakkris.notify
-	fi
-done
+#NOTIFY=(
+#	'/tmp/lakkris.env:c,/lakkris/events-notify/serf.sh'
+#	'/tmp/lakkris.env:x,/lakkris/events-notify/serf.sh'
+#)
+#for entry in ${NOTIFY[@]}; do
+#	if ! grep -q "^${entry%,*}" "/tmp/lakkris.notify"; then
+#		echo "${entry}" >> /tmp/lakkris.notify
+#	fi
+#done
 
 HASH_START=$(md5sum /etc/serf/* | sort -n | md5sum | awk '{print $1}')
 # Set binding config

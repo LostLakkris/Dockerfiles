@@ -1,3 +1,2 @@
 /var/run/s6/services/nzbhydra2
 /var/run/s6/services/serf
-/var/run/s6/services/inotifyd
