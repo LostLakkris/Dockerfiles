@@ -6,10 +6,22 @@ else
 	IFACES=( $(ls -1 /sys/devices/virtual/net/ | awk '!/^lo$/{print}' | sort -r) )
 	LAKKRIS_IFACE=${IFACES[0]}
 fi
+# Try to figure out the proper IP address for binding
+if [[ -z "${LAKKRIS_IP}" && -e /sbin/ip ]]; then
+	LAKKRIS_IP=$(/sbin/ip addr show ${LAKKRIS_IFACE} | awk '/inet/{print $2}' | cut -d'/' -f1)
+fi
+if [[ -z "${LAKKRIS_IP}" && -e /bin/networkctl ]]; then
+	LAKKRIS_IP=$(/bin/networkctl status ${LAKKRIS_IFACE} | awk '$1 ~ "Address"{print $2}')
+fi
+if [[ -z "${LAKKRIS_IP}" ]]; then
+	LAKKRIS_IP=$(hostname -i)
+fi
+
 (
 	printenv | awk '!/affinity/{print "export "$0}';
 	echo "export LAKKRIS_HOSTNAME=${HOSTNAME}";
 	echo "export LAKKRIS_IFACE=${LAKKRIS_IFACE}";
+	echo "export LAKKRIS_IP=${LAKKRIS_IP}";
 	echo "export LAKKRIS_START=$(date +%s)"
 ) | grep 'LAKKRIS' | sort > /tmp/lakkris.env
 

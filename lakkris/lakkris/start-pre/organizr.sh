@@ -19,7 +19,7 @@ if [[ -e "${CONFIG_FILE}" ]]; then
 
 	# Cluster detected things
 	if [[ -d "/var/run/s6/services/serf" && $(s6-svstat -u "/var/run/s6/services/serf") == "true" ]]; then
-		SVCS=( $(serf members -format=json | jq -c --raw-output '.members[]') )
+		SVCS=( $(serf members -format=json | jq -c --raw-output '.members|sort_by(.tags.LAKKRIS_START)|.[]|select(.status=="alive")') )
 		for DATA in ${SVCS[@]}; do
 			SERVER=$(echo "${DATA}" | jq -c --raw-output '.tags.LAKKRIS_SERVERNAME')
 			SERVICE=$(echo "${DATA}" | jq -c --raw-output '.tags.LAKKRIS_SERVICE')
