@@ -24,5 +24,3 @@ fi
 	echo "export LAKKRIS_IP=${LAKKRIS_IP}";
 	echo "export LAKKRIS_START=$(date +%s)"
 ) | grep 'LAKKRIS' | sort > /tmp/lakkris.env
-
-#touch /tmp/lakkris.notify

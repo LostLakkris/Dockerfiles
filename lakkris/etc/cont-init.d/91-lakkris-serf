@@ -1,0 +1,25 @@
+#!/bin/bash
+source /tmp/lakkris.env
+
+if [[ ! -e /etc/serf ]]; then
+        mkdir /etc/serf
+fi
+
+jq -n \
+  --arg bind "${LAKKRIS_IP}:7946" \
+  --arg interface "${LAKKRIS_IFACE}" \
+  '.bind=$bind|.profile="wan"' > /etc/serf/bind.json
+
+jq -n \
+  --arg handler "${LAKKRIS_HANDLER:-/lakkris/handlers/serf.sh}" \
+  '{"event_handlers":[]} | .event_handlers |= . + [$handler]' > /etc/serf/event_handler.json
+
+jq -n \
+  --arg mdns "${LAKKRIS_MDNS:-lakkris}" \
+  '.discover=$mdns' > /etc/serf/discover.json
+
+jq -n \
+  --arg name "$(echo "${LAKKRIS_IP}__${LAKKRIS_HOSTNAME}" | md5sum | awk '{print $1}' | head -c 12)" \
+  '.node_name=$name' > /etc/serf/nodename.json
+
+cat /tmp/lakkris.env | cut -d' ' -f2- | sort | jq --raw-input --slurp '[split("\n") | map(select(. != ""))[] | split("=")] | map({(.[0]): .[1] }) | add | {"tags": .}' > /etc/serf/tags.json
