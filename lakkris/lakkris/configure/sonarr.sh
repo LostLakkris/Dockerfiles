@@ -36,7 +36,7 @@ for DATA in ${SVCS[@]}; do
 			NAME=$(echo "${PAYLOAD}" | jq -c --raw-output '.name')
 			EXISTS=$(echo "${REMOTE_DATA}" | jq -c --raw-output --arg name "${NAME}" '.[]|select(.name==$name)|.id' | head -n 1)
 			if [[ -n "${EXISTS}" && "${EXISTS}" != "null" ]]; then
-				## TODO: Compare and Update, not just update
+				PAYLOAD=$(echo "${PAYLOAD}" | jq -c --raw-output --arg id "${EXISTS}" '.id=$id')
 				## update
 				bash ${CURL} -u "${uri}/${EXISTS}" -m PUT -p "${PAYLOAD}"
 			else
