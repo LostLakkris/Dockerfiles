@@ -1,0 +1,73 @@
+{
+  "enableRss": true,
+  "enableAutomaticSearch": true,
+  "enableInteractiveSearch": true,
+  "supportsRss": true,
+  "supportsSearch": true,
+  "protocol": "usenet",
+  "name": "{{REMOTE_SERVERNAME}}-{{REMOTE_SERVICE}}",
+  "fields": [
+    {
+      "order": 0,
+      "name": "baseUrl",
+      "label": "URL",
+      "value": "http://{{REMOTE_IP}}:{{REMOTE_PORT}}/{{REMOTE_SERVERNAME}}-{{REMOTE_SERVICE}}",
+      "type": "textbox",
+      "advanced": false
+    },
+    {
+      "order": 1,
+      "name": "apiPath",
+      "label": "API Path",
+      "helpText": "Path to the api, usually /api",
+      "value": "/api",
+      "type": "textbox",
+      "advanced": true
+    },
+    {
+      "order": 2,
+      "name": "apiKey",
+      "label": "API Key",
+      "value": "{{REMOTE_APITOKEN}}",
+      "type": "textbox",
+      "advanced": false
+    },
+    {
+      "order": 3,
+      "name": "categories",
+      "label": "Categories",
+      "helpText": "Comma Separated list, leave blank to disable standard/daily shows",
+      "value": [
+        3000,
+        3010,
+        3020,
+        3030,
+        3040
+      ],
+      "type": "textbox",
+      "advanced": true
+    },
+    {
+      "order": 4,
+      "name": "earlyReleaseLimit",
+      "label": "Early Download Limit",
+      "unit": "days",
+      "helpText": "Time before release date Lidarr will download from this indexer, empty is no limit",
+      "type": "number",
+      "advanced": true
+    },
+    {
+      "order": 5,
+      "name": "additionalParameters",
+      "label": "Additional Parameters",
+      "helpText": "Additional Newznab parameters",
+      "type": "textbox",
+      "advanced": true
+    }
+  ],
+  "implementationName": "Newznab",
+  "implementation": "Newznab",
+  "configContract": "NewznabSettings",
+  "infoLink": "https://github.com/Lidarr/Lidarr/wiki/Supported-Indexers#newznab",
+  "tags": []
+}

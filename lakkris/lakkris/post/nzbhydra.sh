@@ -38,11 +38,11 @@ if [[ -d "/var/run/s6/services/nzbhydra2" && $(s6-svstat -u "/var/run/s6/service
 	s6-svwait -u "/var/run/s6/services/nzbhydra2"
 fi
 
-LAKKRIS_APITOKEN=$(awk '/apiKey: /{print $NF}' ${CONFIG_FILE} | tr -d '"')
+LAKKRIS_APITOKEN=$(yq r "${CONFIG_FILE}" 'main.apiKey')
 UPDATE="export LAKKRIS_APITOKEN=${LAKKRIS_APITOKEN}"
 grep -q "${UPDATE%=*}" /tmp/lakkris.env && sed -i "s@${UPDATE%=*}.*@${UPDATE}@" /tmp/lakkris.env || echo "${UPDATE}" >> /tmp/lakkris.env
 
-LAKKRIS_WEBROOT_FILE=$(awk '/urlBase: /{print $NF}' ${CONFIG_FILE} | tr -d '"/')
+LAKKRIS_WEBROOT_FILE=$(yq r "${CONFIG_FILE}" 'main.urlBase' | tr -d '"/')
 if [[ "${LAKKRIS_WEBROOT}" == "${LAKKRIS_WEBROOT_FILE}" ]]; then
 	UPDATE="export LAKKRIS_WEBROOT=${LAKKRIS_WEBROOT}"
 	grep -q "${UPDATE%=*}" /tmp/lakkris.env && sed -i "s@${UPDATE%=*}.*@${UPDATE}@" /tmp/lakkris.env || echo "${UPDATE}" >> /tmp/lakkris.env

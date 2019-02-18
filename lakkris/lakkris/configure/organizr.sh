@@ -49,8 +49,8 @@ done
 HASH_END=$(md5sum "${CONFIG_FILE}" ${LAKKRIS_CONFIG}/* | sort | md5sum | awk '{print $1}')
 
 if [[ "${HASH_START}" != "${HASH_END}" ]]; then
-	s6-svc -h "/var/run/s6/services/${LAKKRIS_SERVICE}"
-	s6-svwait -u "/var/run/s6/services/${LAKKRIS_SERVICE}"
+	s6-svc -h "/var/run/s6/services/nginx"
+	s6-svwait -u "/var/run/s6/services/nginx"
 fi
 
 IFS=$OIFS

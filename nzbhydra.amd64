@@ -2,6 +2,8 @@ FROM linuxserver/hydra2:latest
 EXPOSE 7946
 COPY bin/serf_0.8.1_amd64 /usr/sbin/serf
 COPY bin/jq_1.6_amd64 /usr/sbin/jq
+# https://github.com/mikefarah/yq
+COPY bin/yq_2.2.1_amd64 /usr/sbin/yq
 COPY bin/templater /usr/sbin/templater
 COPY bin/inotifyd_1.27.1_686 /sbin/inotifyd
 COPY bin/nc_1.27.1_686 /usr/bin/nc

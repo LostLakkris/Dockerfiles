@@ -1,0 +1,68 @@
+{
+  "enableRss": true,
+  "enableSearch": true,
+  "supportsRss": true,
+  "supportsSearch": true,
+  "protocol": "usenet",
+  "name": "{{REMOTE_SERVERNAME}}-{{REMOTE_SERVICE}}",
+  "fields": [
+    {
+      "order": 0,
+      "name": "BaseUrl",
+      "label": "URL",
+      "value": "http://{{REMOTE_IP}}:{{REMOTE_PORT}}/{{REMOTE_SERVERNAME}}-{{REMOTE_SERVICE}}",
+      "type": "textbox",
+      "advanced": false
+    },
+    {
+      "order": 1,
+      "name": "ApiPath",
+      "label": "API Path",
+      "helpText": "Path to the api, usually /api",
+      "value": "/api",
+      "type": "textbox",
+      "advanced": true
+    },
+    {
+      "order": 2,
+      "name": "ApiKey",
+      "label": "API Key",
+      "value": "{{REMOTE_APITOKEN}}",
+      "type": "textbox",
+      "advanced": false
+    },
+    {
+      "order": 3,
+      "name": "Categories",
+      "label": "Categories",
+      "helpText": "Comma Separated list, leave blank to disable standard/daily shows",
+      "value": [
+        5030,
+        5040
+      ],
+      "type": "textbox",
+      "advanced": false
+    },
+    {
+      "order": 4,
+      "name": "AnimeCategories",
+      "label": "Anime Categories",
+      "helpText": "Comma Separated list, leave blank to disable anime",
+      "value": [],
+      "type": "textbox",
+      "advanced": false
+    },
+    {
+      "order": 5,
+      "name": "AdditionalParameters",
+      "label": "Additional Parameters",
+      "helpText": "Additional Newznab parameters",
+      "type": "textbox",
+      "advanced": true
+    }
+  ],
+  "implementationName": "Newznab",
+  "implementation": "Newznab",
+  "configContract": "NewznabSettings",
+  "infoLink": "https://github.com/Sonarr/Sonarr/wiki/Supported-Indexers#newznab"
+}

@@ -1,0 +1,139 @@
+{
+  "enable": true,
+  "protocol": "usenet",
+  "name": "{{REMOTE_SERVERNAME}}-{{REMOTE_SERVICE}}",
+  "fields": [
+    {
+      "order": 0,
+      "name": "Host",
+      "label": "Host",
+      "value": "{{REMOTE_IP}}",
+      "type": "textbox",
+      "advanced": false
+    },
+    {
+      "order": 1,
+      "name": "Port",
+      "label": "Port",
+      "value": {{REMOTE_PORT}},
+      "type": "textbox",
+      "advanced": false
+    },
+    {
+      "order": 2,
+      "name": "Username",
+      "label": "Username",
+      "value": "{{REMOTE_USERNAME}}",
+      "type": "textbox",
+      "advanced": false
+    },
+    {
+      "order": 3,
+      "name": "Password",
+      "label": "Password",
+      "value": "{{REMOTE_PASSWORD}}",
+      "type": "password",
+      "advanced": false
+    },
+    {
+      "order": 4,
+      "name": "MovieCategory",
+      "label": "Category",
+      "helpText": "Adding a category specific to Radarr avoids conflicts with unrelated downloads, but it's optional",
+      "value": "{{LOCAL_SERVERNAME}}-{{LOCAL_CONTENT}}",
+      "type": "textbox",
+      "advanced": false
+    },
+    {
+      "order": 5,
+      "name": "RecentMoviePriority",
+      "label": "Recent Priority",
+      "helpText": "Priority to use when grabbing movies that released within the last 21 days",
+      "value": 0,
+      "type": "select",
+      "advanced": false,
+      "selectOptions": [
+        {
+          "value": -100,
+          "name": "VeryLow"
+        },
+        {
+          "value": -50,
+          "name": "Low"
+        },
+        {
+          "value": 0,
+          "name": "Normal"
+        },
+        {
+          "value": 50,
+          "name": "High"
+        },
+        {
+          "value": 100,
+          "name": "VeryHigh"
+        },
+        {
+          "value": 900,
+          "name": "Force"
+        }
+      ]
+    },
+    {
+      "order": 6,
+      "name": "OlderMoviePriority",
+      "label": "Older Priority",
+      "helpText": "Priority to use when grabbing episodes that aired over 14 days ago",
+      "value": 0,
+      "type": "select",
+      "advanced": false,
+      "selectOptions": [
+        {
+          "value": -100,
+          "name": "VeryLow"
+        },
+        {
+          "value": -50,
+          "name": "Low"
+        },
+        {
+          "value": 0,
+          "name": "Normal"
+        },
+        {
+          "value": 50,
+          "name": "High"
+        },
+        {
+          "value": 100,
+          "name": "VeryHigh"
+        },
+        {
+          "value": 900,
+          "name": "Force"
+        }
+      ]
+    },
+    {
+      "order": 7,
+      "name": "AddPaused",
+      "label": "Add Paused",
+      "helpText": "This option requires at least NzbGet version 16.0",
+      "value": false,
+      "type": "checkbox",
+      "advanced": false
+    },
+    {
+      "order": 8,
+      "name": "UseSsl",
+      "label": "Use SSL",
+      "value": false,
+      "type": "checkbox",
+      "advanced": false
+    }
+  ],
+  "implementationName": "NZBGet",
+  "implementation": "Nzbget",
+  "configContract": "NzbgetSettings",
+  "infoLink": "https://github.com/Radarr/Radarr/wiki/Supported-DownloadClients#nzbget"
+}
