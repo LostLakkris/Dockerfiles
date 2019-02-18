@@ -17,6 +17,7 @@ CONTENT_TYPE='application/json'
 URI=''
 PAYLOAD=''
 ARGS=()
+URLENCODE=()
 while [[ -n "${1}" ]]; do
 	case "${1}" in
 		"-m")
@@ -29,6 +30,10 @@ while [[ -n "${1}" ]]; do
 			;;
 		"-p")
 			PAYLOAD="${2}"
+			shift
+			;;
+		"--data")
+			URLENCODE+=( "${2}" )
 			shift
 			;;
 		"-c")
@@ -51,6 +56,11 @@ if [[ -n "${CONTENT_TYPE}" ]]; then
 fi
 if [[ -n "${PAYLOAD}" && ("${METHOD}" == "POST" || "${METHOD}" == "PUT") ]]; then
 	ARGS+=( '-d' "${PAYLOAD}" )
+fi
+if [[ ${#URLENCODE[@]} -gt 0 ]]; then
+	for enc in ${URLENCODE[@]}; do
+		ARGS+=( '--data-urlencode' "${enc}" )
+	done
 fi
 URL="http://127.0.0.1:${LAKKRIS_PORT}/api?v1"
 ARGS+=( "${URL}/${URI}" )
