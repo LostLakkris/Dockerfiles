@@ -1,14 +1,17 @@
 FROM linuxserver/radarr:latest
-EXPOSE 7946
-COPY bin/serf_0.8.1_amd64 /usr/sbin/serf
-COPY bin/jq_1.6_amd64 /usr/sbin/jq
-COPY bin/templater /usr/sbin/templater
-COPY bin/inotifyd_1.27.1_686 /sbin/inotifyd
-COPY bin/nc_1.27.1_686 /usr/bin/nc
 ENV LAKKRIS_SERVICE="radarr" \
     LAKKRIS_CONTENT="movies" \
     LAKKRIS_ICON="plugins/images/tabs/radarr.png" \
     LAKKRIS_PORT="7878" \
     LAKKRIS_CONFIGFILE="/config/config.xml" \
     LAKKRIS_SERVERNAME="lazylakkris"
+
+EXPOSE 7946
+
+COPY bin/serf_0.8.1_amd64 /usr/sbin/serf
+COPY bin/jq_1.6_amd64 /usr/sbin/jq
+COPY bin/templater /usr/sbin/templater
+COPY bin/inotifyd_1.27.1_686 /sbin/inotifyd
+COPY bin/nc_1.27.1_686 /usr/bin/nc
+
 COPY lakkris/ /

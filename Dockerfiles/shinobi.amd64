@@ -1,5 +1,7 @@
-FROM lsiobase/alpine:latest
-ENV LAKKRIS_SERVICE="serf" \
+FROM migoller/shinobi:latest
+ENV LAKKRIS_SERVICE="shinobi" \
+    LAKKRIS_ICON="" \
+    LAKKRIS_PORT="8080" \
     LAKKRIS_SERVERNAME="lazylakkris"
 
 EXPOSE 7946
@@ -7,6 +9,6 @@ EXPOSE 7946
 COPY bin/serf_0.8.1_amd64 /usr/sbin/serf
 COPY bin/jq_1.6_amd64 /usr/sbin/jq
 COPY bin/templater /usr/sbin/templater
-#COPY bin/nc_1.27.1_686 /usr/bin/nc
+COPY bin/inotifyd_1.27.1_686 /sbin/inotifyd
 
 COPY lakkris/ /

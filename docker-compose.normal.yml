@@ -7,7 +7,7 @@ services:
   serf:
     build:
       context: .
-      dockerfile: serf.amd64
+      dockerfile: Dockerfiles/serf.amd64
     networks:
     - testing
   nginx:
@@ -26,7 +26,7 @@ services:
   organizr:
     build:
       context: .
-      dockerfile: organizr.amd64
+      dockerfile: Dockerfiles/organizr.amd64
     depends_on:
     - nginx
     - serf
@@ -40,7 +40,7 @@ services:
   nzbget:
     build:
       context: .
-      dockerfile: nzbget.amd64
+      dockerfile: Dockerfiles/nzbget.amd64
     depends_on:
     - organizr
     - serf
@@ -51,7 +51,7 @@ services:
   nzbhydra:
     build:
       context: .
-      dockerfile: nzbhydra.amd64
+      dockerfile: Dockerfiles/nzbhydra.amd64
     depends_on:
     - organizr
     - serf
@@ -62,7 +62,7 @@ services:
   sonarr:
     build:
       context: .
-      dockerfile: sonarr.amd64
+      dockerfile: Dockerfiles/sonarr.amd64
     depends_on:
     - organizr
     - serf
@@ -73,7 +73,7 @@ services:
   radarr:
     build:
       context: .
-      dockerfile: radarr.amd64
+      dockerfile: Dockerfiles/radarr.amd64
     depends_on:
     - organizr
     - serf
@@ -84,7 +84,7 @@ services:
   lidarr:
     build:
       context: .
-      dockerfile: lidarr.amd64
+      dockerfile: Dockerfiles/lidarr.amd64
     depends_on:
     - organizr
     - serf
@@ -95,7 +95,7 @@ services:
   lazylibrarian:
     build:
       context: .
-      dockerfile: lazylibrarian.amd64
+      dockerfile: Dockerfiles/lazylibrarian.amd64
     depends_on:
     - organizr
     - serf
@@ -106,7 +106,7 @@ services:
   plex:
     build:
       context: .
-      dockerfile: plex.amd64
+      dockerfile: Dockerfiles/plex.amd64
     depends_on:
     - organizr
     - serf
@@ -117,11 +117,22 @@ services:
   tautulli:
     build:
       context: .
-      dockerfile: tautulli.amd64
+      dockerfile: Dockerfiles/tautulli.amd64
     depends_on:
     - organizr
     - serf
     volumes:
     - "./config/tautulli:/config"
+    networks:
+    - testing
+  shinobi:
+    build:
+      context: .
+      dockerfile: Dockerfiles/shinobi.amd64
+    depends_on:
+    - organizr
+    - serf
+    volumes:
+    - "./config/shinobi:/config"
     networks:
     - testing

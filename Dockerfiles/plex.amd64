@@ -1,11 +1,14 @@
 FROM linuxserver/plex:latest
-EXPOSE 7946
-COPY bin/serf_0.8.1_amd64 /usr/sbin/serf
-COPY bin/jq_1.6_amd64 /usr/sbin/jq
-COPY bin/templater /usr/sbin/templater
-COPY bin/inotifyd_1.27.1_686 /sbin/inotifyd
 ENV LAKKRIS_SERVICE="plex" \
     LAKKRIS_ICON="plugins/images/tabs/plex.png" \
     LAKKRIS_PORT="32400" \
     LAKKRIS_SERVERNAME="lazylakkris"
+
+EXPOSE 7946
+
+COPY bin/serf_0.8.1_amd64 /usr/sbin/serf
+COPY bin/jq_1.6_amd64 /usr/sbin/jq
+COPY bin/templater /usr/sbin/templater
+COPY bin/inotifyd_1.27.1_686 /sbin/inotifyd
+
 COPY lakkris/ /
