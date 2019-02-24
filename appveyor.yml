@@ -18,16 +18,18 @@ skip_commits:
 
 build_script:
 - sh: >-
-    for x in $(ls -1 *.amd64); do
+    for z in $(ls -1 Dockerfiles/*.amd64); do
+      x=$(echo "${z}" | cut -d'/' -f2-)
       echo ${x}
-      docker build --pull --no-cache -t "lostlakkris/${x%.*}:latest" -t "lostlakkris/${x%.*}:${ARCH}" -f ${x} .
+      docker build --pull --no-cache -t "lostlakkris/${x%.*}:latest" -t "lostlakkris/${x%.*}:${ARCH}" -f ${z} .
     done
 
 #test_script:
 deploy_script:
 - sh: docker login -u ${docker_user} -p ${docker_password}
 - sh: >-
-    for x in $(ls -1 *.amd64); do
+    for z in $(ls -1 Dockerfiles/*.amd64); do
+      x=$(echo "${z}" | cut -d'/' -f2-)
       echo ${x}
       docker push "lostlakkris/${x%.*}"
     done
