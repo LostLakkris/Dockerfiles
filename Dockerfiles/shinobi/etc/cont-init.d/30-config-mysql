@@ -1,0 +1,13 @@
+#!/usr/bin/with-contenv bash
+if [[ ! -d /run/mysqld ]]; then
+	mkdir /run/mysqld
+fi
+chown -R abc:abc \
+	/run/mysqld
+
+sed -i 's/key_buffer\b/key_buffer_size/g' /etc/my.cnf.d/mariadb-server.cnf
+sed -ri 's/^(bind-address|skip-networking)/;\1/' /etc/my.cnf.d/mariadb-server.cnf
+sed -i s#/var/log/mysql#/config/log/mysql#g /etc/my.cnf.d/mariadb-server.cnf
+sed -i -e 's/\(user.*=\).*/\1 abc/g' /etc/my.cnf.d/mariadb-server.cnf
+sed -i -e "s#\\(datadir.*=\\).*#\\1 $DATADIR/mysql#g" /etc/my.cnf.d/mariadb-server.cnf
+sed -i "s/user='mysql'/user='abc'/g" /usr/bin/mysqld_safe

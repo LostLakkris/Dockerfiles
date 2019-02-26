@@ -1,0 +1,16 @@
+#!/usr/bin/with-contenv bash
+if [[ ! -d /config/shinobi ]]; then
+	mkdir /config/shinobi
+fi
+for x in 'conf' 'super'; do
+	if [[ ! -e /config/${x}.json ]]; then
+		cp /opt/shinobi/${x}.sample.json /config/shinobi/${x}.json
+		ln -s /config/shinobi/${x}.json /opt/shinobi/${x}.json
+	fi
+done
+
+chown -R abc:abc \
+	/opt/shinobi
+
+chown -R abc:abc \
+	/config/shinobi

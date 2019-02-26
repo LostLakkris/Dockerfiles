@@ -10,4 +10,4 @@
 		bash /lakkris/post/${LAKKRIS_SERVICE}.sh
 		bash /lakkris/misc/serf-tags.sh
 	fi
-)&
+) &

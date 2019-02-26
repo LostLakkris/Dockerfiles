@@ -1,0 +1,4 @@
+#!/usr/bin/with-contenv bash
+cd /opt/shinobi
+exec \
+	s6-setuidgid abc /usr/bin/node /opt/shinobi/cron.js

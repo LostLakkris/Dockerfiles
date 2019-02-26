@@ -9,7 +9,7 @@ CURL="/lakkris/curl/${LAKKRIS_SERVICE}.sh"
 
 # Wait for all services
 for service in 'serf' 'nginx' 'php-fpm' 'cron'; do
-	while [[ ! -e "${CONFIG_FILE}" || ! -e "${ORGANIZR_CONFIG}" || ! -d "/var/run/s6/services/${service}" || $(s6-svstat -u "/var/run/s6/services/${service}") != "true" ]]; do
+	while [[ ! -e "${CONFIG_FILE}" || ! -d "/var/run/s6/services/${service}" || $(s6-svstat -u "/var/run/s6/services/${service}") != "true" ]]; do
 		sleep 1s
 	done
 done

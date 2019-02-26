@@ -134,5 +134,6 @@ services:
     - serf
     volumes:
     - "./config/shinobi:/config"
+    - "./config/shinobi-videos:/opt/shinobi/videos"
     networks:
     - testing
