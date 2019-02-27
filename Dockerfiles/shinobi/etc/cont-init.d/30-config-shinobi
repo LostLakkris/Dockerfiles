@@ -5,6 +5,8 @@ fi
 for x in 'conf' 'super'; do
 	if [[ ! -e /config/shinobi/${x}.json ]]; then
 		cp /opt/shinobi/${x}.sample.json /config/shinobi/${x}.json
+	fi
+	if [[ ! -e /opt/shinobi/${x}.json ]]; then
 		ln -s /config/shinobi/${x}.json /opt/shinobi/${x}.json
 	fi
 done
