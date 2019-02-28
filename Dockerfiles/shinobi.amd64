@@ -48,7 +48,7 @@ RUN \
    chmod +x /usr/bin/ff* && \
    rm -f ffmpeg-release-64bit-static.tar.xz && \
    rm -rf ./ffmpeg-3.3.4-64bit-static && \
-   git clone https://gitlab.com/Shinobi-Systems/Shinobi.git /opt/shinobi && \
+   git clone --single-branch --branch dev --depth 1 https://gitlab.com/Shinobi-Systems/Shinobi.git /opt/shinobi && \
    cd /opt/shinobi && /usr/bin/npm install
 
 VOLUME ["/opt/shinobi/videos"]
