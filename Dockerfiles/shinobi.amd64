@@ -41,7 +41,7 @@ RUN \
         wget \
         tar \
         xz && \
-    apk add --no-cache \ # For motion
+    apk add --no-cache \
         pango \
         pango-dev \
         cairo \
@@ -55,7 +55,7 @@ RUN \
    rm -rf ./ffmpeg-3.3.4-64bit-static && \
    git clone --single-branch --branch dev --depth 1 https://gitlab.com/Shinobi-Systems/Shinobi.git /opt/shinobi && \
    cd /opt/shinobi && /usr/bin/npm install && \
-   npm install canvas@1.6 moment --unsafe-perm # For motion
+   npm install canvas@1.6 moment --unsafe-perm
 
 VOLUME ["/opt/shinobi/videos"]
 VOLUME ["/config"]
