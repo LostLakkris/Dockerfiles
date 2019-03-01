@@ -2,6 +2,7 @@
 if [[ ! -d /config/shinobi ]]; then
 	mkdir /config/shinobi
 fi
+# Base shinobi
 for x in 'conf' 'super'; do
 	if [[ ! -e /config/shinobi/${x}.json ]]; then
 		cp /opt/shinobi/${x}.sample.json /config/shinobi/${x}.json
@@ -10,6 +11,14 @@ for x in 'conf' 'super'; do
 		ln -s /config/shinobi/${x}.json /opt/shinobi/${x}.json
 	fi
 done
+
+# Motion
+if [[ ! -e /config/shinobi/motion.conf ]]; then
+	cp /opt/shinobi/plugins/motion/conf.sample.json /config/shinobi/motion.json
+fi
+if [[ ! -e /opt/shinobi/plugins/motion/conf.json ]]; then
+	ln -s /config/shinobi/motion.json /opt/shinobi/plugins/motion/conf.json
+fi
 
 chown -R abc:abc \
 	/opt/shinobi

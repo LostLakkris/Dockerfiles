@@ -41,6 +41,11 @@ RUN \
         wget \
         tar \
         xz && \
+    apk add --no-cache \ # For motion
+        pango \
+        pango-dev \
+        cairo \
+        cairo-dev && \
 #   sed -ie "s/^bind-address\s*=\s*127\.0\.0\.1$/#bind-address = 0.0.0.0/" /etc/mysql/my.cnf && \
    wget --quiet https://cdn.shinobi.video/installers/ffmpeg-release-64bit-static.tar.xz && \
    tar xpvf ./ffmpeg-release-64bit-static.tar.xz -C ./ && \
@@ -49,7 +54,8 @@ RUN \
    rm -f ffmpeg-release-64bit-static.tar.xz && \
    rm -rf ./ffmpeg-3.3.4-64bit-static && \
    git clone --single-branch --branch dev --depth 1 https://gitlab.com/Shinobi-Systems/Shinobi.git /opt/shinobi && \
-   cd /opt/shinobi && /usr/bin/npm install
+   cd /opt/shinobi && /usr/bin/npm install && \
+   npm install canvas@1.6 moment --unsafe-perm # For motion
 
 VOLUME ["/opt/shinobi/videos"]
 VOLUME ["/config"]
