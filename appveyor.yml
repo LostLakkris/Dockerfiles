@@ -22,6 +22,9 @@ build_script:
       x=$(echo "${z}" | cut -d'/' -f2-)
       echo ${x}
       docker build --pull --no-cache -t "lostlakkris/${x%.*}:latest" -t "lostlakkris/${x%.*}:${ARCH}" -f ${z} .
+      if [ $? -ne 0 ]; then
+        exit 2
+      fi
     done
 
 #test_script:
