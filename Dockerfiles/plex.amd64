@@ -2,7 +2,7 @@ FROM linuxserver/plex:latest
 ENV LAKKRIS_SERVICE="plex" \
     LAKKRIS_ICON="plugins/images/tabs/plex.png" \
     LAKKRIS_PORT="32400" \
-    LAKKRIS_SERVERNAME="lazylakkris"
+    LAKKRIS_SERVERNAME="lostlakkris"
 
 EXPOSE 7946
 

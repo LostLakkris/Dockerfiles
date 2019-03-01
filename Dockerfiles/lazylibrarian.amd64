@@ -4,7 +4,7 @@ ENV LAKKRIS_SERVICE="lazylibrarian" \
     LAKKRIS_ICON="plugins/images/tabs/lazylibrarian.png" \
     LAKKRIS_PORT="5299" \
     LAKKRIS_CONFIGFILE="/config/config.ini" \
-    LAKKRIS_SERVERNAME="lazylakkris"
+    LAKKRIS_SERVERNAME="lostlakkris"
 
 EXPOSE 7946
 

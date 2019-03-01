@@ -16,3 +16,6 @@ chown -R abc:abc \
 
 chown -R abc:abc \
 	/config/shinobi
+
+chown -R abc:abc \
+	/dev/shm/streams

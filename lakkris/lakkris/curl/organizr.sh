@@ -47,7 +47,7 @@ if [[ -z "${URI}" ]]; then
 	echo "No URI specified"
 	exit 1
 fi
-ARGS+=( '--connect-timeout' '10' '-L' '-s' '-k' '-A' 'lazylakkris' '-X' "${METHOD}" )
+ARGS+=( '--connect-timeout' '10' '-L' '-s' '-k' '-A' 'lostlakkris' '-X' "${METHOD}" )
 if [[ -n "${LAKKRIS_APITOKEN}" ]]; then
 	ARGS+=( '--header' "Token: ${LAKKRIS_APITOKEN}" )
 fi

@@ -1,6 +1,6 @@
 FROM lsiobase/alpine:latest
 ENV LAKKRIS_SERVICE="serf" \
-    LAKKRIS_SERVERNAME="lazylakkris"
+    LAKKRIS_SERVERNAME="lostlakkris"
 
 EXPOSE 7946
 

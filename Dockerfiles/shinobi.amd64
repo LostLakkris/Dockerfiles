@@ -64,7 +64,7 @@ ENV LAKKRIS_SERVICE="shinobi" \
     LAKKRIS_ICON="" \
     LAKKRIS_PORT="8080" \
     LAKKRIS_CONFIGFILE="/config/shinobi/conf.json" \
-    LAKKRIS_SERVERNAME="lazylakkris"
+    LAKKRIS_SERVERNAME="lostlakkris"
 
 EXPOSE 7946
 

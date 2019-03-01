@@ -4,7 +4,7 @@ ENV LAKKRIS_SERVICE="nzbhydra" \
     LAKKRIS_CONTENT="nzb" \
     LAKKRIS_PORT="5076" \
     LAKKRIS_CONFIGFILE="/config/nzbhydra.yml" \
-    LAKKRIS_SERVERNAME="lazylakkris"
+    LAKKRIS_SERVERNAME="lostlakkris"
 
 EXPOSE 7946
 

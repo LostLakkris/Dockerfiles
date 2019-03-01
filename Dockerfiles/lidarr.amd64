@@ -4,7 +4,7 @@ ENV LAKKRIS_SERVICE="lidarr" \
     LAKKRIS_ICON="plugins/images/tabs/lidarr.png" \
     LAKKRIS_PORT="8686" \
     LAKKRIS_CONFIGFILE="/config/config.xml" \
-    LAKKRIS_SERVERNAME="lazylakkris"
+    LAKKRIS_SERVERNAME="lostlakkris"
 
 EXPOSE 7946
 

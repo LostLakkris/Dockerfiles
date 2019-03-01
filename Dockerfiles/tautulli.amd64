@@ -3,7 +3,7 @@ ENV LAKKRIS_SERVICE="tautulli" \
     LAKKRIS_ICON="plugins/images/tabs/tautulli.png" \
     LAKKRIS_PORT="8181" \
     LAKKRIS_CONFIGFILE="/config/config.ini" \
-    LAKKRIS_SERVERNAME="lazylakkris"
+    LAKKRIS_SERVERNAME="lostlakkris"
 
 EXPOSE 7946
 
