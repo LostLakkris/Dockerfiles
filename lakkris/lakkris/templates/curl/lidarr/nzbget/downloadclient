@@ -7,7 +7,7 @@
         "order": 0,
         "name": "host",
         "label": "Host",
-      "value": "{{REMOTE_IP}}",
+      "value": "{{REMOTE_HOSTNAME}}",
         "type": "textbox",
         "advanced": false
       },
