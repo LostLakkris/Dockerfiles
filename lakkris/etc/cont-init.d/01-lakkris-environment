@@ -16,11 +16,15 @@ fi
 if [[ -z "${LAKKRIS_IP}" ]]; then
 	LAKKRIS_IP=$(hostname -i)
 fi
+if [[ -z "${LAKKRIS_RESOLV}" && -e /etc/resolv.conf ]]; then
+	LAKKRIS_RESOLV=$(awk '/^nameserver/{print $NF}' /etc/resolv.conf | head -n 1)
+fi
 
 (
 	printenv | awk '!/affinity/{print "export "$0}';
 	echo "export LAKKRIS_HOSTNAME=${HOSTNAME}";
 	echo "export LAKKRIS_IFACE=${LAKKRIS_IFACE}";
 	echo "export LAKKRIS_IP=${LAKKRIS_IP}";
+	echo "export LAKKRIS_RESOLV=${LAKKRIS_RESOLV}";
 	echo "export LAKKRIS_START=$(date +%s)"
 ) | grep 'LAKKRIS' | sort > /tmp/lakkris.env
