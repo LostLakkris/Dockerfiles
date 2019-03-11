@@ -20,6 +20,8 @@ if [[ ! -e /opt/shinobi/plugins/motion/conf.json ]]; then
 	ln -s /config/shinobi/motion.json /opt/shinobi/plugins/motion/conf.json
 fi
 
+git pull -q /opt/shinobi
+
 chown -R abc:abc \
 	/opt/shinobi
 
