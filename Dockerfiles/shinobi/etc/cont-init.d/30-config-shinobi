@@ -20,13 +20,19 @@ if [[ ! -e /opt/shinobi/plugins/motion/conf.json ]]; then
 	ln -s /config/shinobi/motion.json /opt/shinobi/plugins/motion/conf.json
 fi
 
-git pull -q /opt/shinobi
+PWD=$(pwd)
+cd /opt/shinobi && git pull -q
+cd $PWD
 
 chown -R abc:abc \
 	/opt/shinobi
 
 chown -R abc:abc \
 	/config/shinobi
+
+if [[ ! -e /dev/shm/streams ]]; then
+	mkdir /dev/shm/streams
+fi
 
 chown -R abc:abc \
 	/dev/shm/streams
