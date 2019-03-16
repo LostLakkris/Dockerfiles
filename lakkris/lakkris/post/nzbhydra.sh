@@ -42,11 +42,11 @@ LAKKRIS_APITOKEN=$(yq r "${CONFIG_FILE}" 'main.apiKey')
 UPDATE="export LAKKRIS_APITOKEN=${LAKKRIS_APITOKEN}"
 grep -q "${UPDATE%=*}" /tmp/lakkris.env && sed -i "s@${UPDATE%=*}.*@${UPDATE}@" /tmp/lakkris.env || echo "${UPDATE}" >> /tmp/lakkris.env
 
-LAKKRIS_WEBROOT_FILE=$(yq r "${CONFIG_FILE}" 'main.urlBase' | tr -d '"/')
-if [[ "${LAKKRIS_WEBROOT}" == "${LAKKRIS_WEBROOT_FILE}" ]]; then
-	UPDATE="export LAKKRIS_WEBROOT=${LAKKRIS_WEBROOT}"
-	grep -q "${UPDATE%=*}" /tmp/lakkris.env && sed -i "s@${UPDATE%=*}.*@${UPDATE}@" /tmp/lakkris.env || echo "${UPDATE}" >> /tmp/lakkris.env
-fi
+#LAKKRIS_WEBROOT_FILE=$(yq r "${CONFIG_FILE}" 'main.urlBase' | tr -d '"/')
+#if [[ "${LAKKRIS_WEBROOT}" == "${LAKKRIS_WEBROOT_FILE}" ]]; then
+UPDATE="export LAKKRIS_WEBROOT=${LAKKRIS_WEBROOT}"
+grep -q "${UPDATE%=*}" /tmp/lakkris.env && sed -i "s@${UPDATE%=*}.*@${UPDATE}@" /tmp/lakkris.env || echo "${UPDATE}" >> /tmp/lakkris.env
+#fi
 
 #### All services should be up and file-configured by now
 # Cluster detected things
