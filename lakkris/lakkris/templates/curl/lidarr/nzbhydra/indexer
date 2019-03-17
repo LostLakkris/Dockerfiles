@@ -11,7 +11,7 @@
       "order": 0,
       "name": "baseUrl",
       "label": "URL",
-      "value": "http://{{REMOTE_HOSTNAME}}:{{REMOTE_PORT}}/{{REMOTE_SERVERNAME}}-{{REMOTE_SERVICE}}",
+      "value": "http://{{REMOTE_HOSTNAME}}:{{REMOTE_PORT}}/{{REMOTE_WEBROOT}}",
       "type": "textbox",
       "advanced": false
     },
