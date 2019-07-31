@@ -1,4 +1,11 @@
 #!/usr/bin/with-contenv bash
+if [[ ! -d /dev/shm/streams ]]; then
+        mkdir /dev/shm/streams
+fi
+
+chown -R abc:abc \
+        /dev/shm/streams
+
 cd /opt/shinobi
 exec \
 	s6-setuidgid abc /usr/bin/node /opt/shinobi/camera.js
