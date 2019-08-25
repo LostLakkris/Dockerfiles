@@ -1,0 +1,4 @@
+#!/usr/bin/with-contenv bash
+(
+	printenv | awk '/^SET_/{print "export "$0}'
+) | sort > /tmp/environment.vars
