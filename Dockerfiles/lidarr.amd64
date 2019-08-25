@@ -1,17 +1,7 @@
 FROM linuxserver/lidarr:latest
-ENV LAKKRIS_SERVICE="lidarr" \
-    LAKKRIS_CONTENT="music" \
-    LAKKRIS_ICON="plugins/images/tabs/lidarr.png" \
-    LAKKRIS_PORT="8686" \
-    LAKKRIS_CONFIGFILE="/config/config.xml" \
-    LAKKRIS_SERVERNAME="lostlakkris"
+ENV SET_URLBASE="/" \
+    SET_SERVICE="lidar" \
+    SET_PORT="8686" \
+    SET_APIKEY=""
 
-EXPOSE 7946
-
-COPY bin/serf_0.8.1_amd64 /usr/sbin/serf
-COPY bin/jq_1.6_amd64 /usr/sbin/jq
-COPY bin/templater /usr/sbin/templater
-COPY bin/inotifyd_1.27.1_686 /sbin/inotifyd
-COPY bin/nc_1.27.1_686 /usr/bin/nc
-
-COPY lakkris/ /
+COPY lakkris-lite/ /

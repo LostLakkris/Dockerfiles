@@ -1,0 +1,38 @@
+#!/usr/bin/with-contenv bash
+case ${SET_SERVICE} in
+	"sonarr")
+		;;
+	"radarr")
+		;;
+	"lidarr")
+		;;
+	*)
+		echo "== Not a sonarr-derivative."
+		exit 0;
+		;;
+esac
+(
+	# Wait for the config file to be created
+	while [[ ! -e /config/config.xml ]]; then
+		sleep 1s
+	fi
+	# Modify config.xml and restart service if it changed
+	MD5_START=$(md5sum /config/config.xml | awk '{print $1}')
+
+	CONFIG=(
+		"s@<UrlBase>.*</UrlBase>@<UrlBase>${SET_URLBASE}</UrlBase>@g"
+		"s@<Port>.*</Port>@<Port>${SET_PORT}</Port>@g"
+	)
+	if [[ -n "${SET_APIKEY}" ]]; then
+		CONFIG+=("s@<ApiKey>.*</ApiKey>@<ApiKey>${SET_APIKEY}</ApiKey>@g")
+	fi
+
+	for STRING in ${CONFIG[@]}; do
+		sed -i "${STRING}" "${CONFIG_FILE}"
+	done
+
+	MD5_END=$(md5sum /config/config.xml | awk '{print $1}')
+	if [[ "${MD5_START}" != "${MD5_END}" && s6-svstat -u "/var/run/s6/services/${SET_SERVICE}") == "true" ]]; then
+		s6-svc -h "/var/run/s6/services/${SET_SERVICE}"
+	fi
+) &
