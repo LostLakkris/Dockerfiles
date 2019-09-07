@@ -1,0 +1,48 @@
+language: bash
+
+services:
+- docker
+
+adons:
+  apt:
+    update: true
+    packages:
+    - docker-ce
+
+env:
+- DOCKER_CLI_EXPERIMENTAL=enabled
+
+matrix:
+  include:
+  - env:
+    - FROM=linuxserver/sonarr
+    - CONTIANER=sonarr
+  - env:
+    - FROM=linuxserver/radarr
+    - CONTIANER=radarr
+  - env:
+    - FROM=linuxserver/lidarr
+    - CONTIANER=lidarr
+  - env:
+    - FROM=linuxserver/lazylibrarian
+    - CONTAINER=lazylibrarian
+  - env:
+    - FROM=linuxserver/nzbget
+    - CONTIANER=nzbget
+  - env:
+    - FROM=linuxserver/hydra2
+    - CONTIANER=nzbhydra
+  - env:
+    - FROM=organizrtools/organizr-v2
+    - CONTIANER=organizr
+  - env:
+    - FROM=linuxserver/plex
+    - CONTIANER=plex
+  - env:
+    - FROM=linuxserver/tautulli
+    - CONTIANER=tautulli
+  - env:
+    - FROM=
+    - CONTIANER=shinobi
+
+script: ./build.sh
