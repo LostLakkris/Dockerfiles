@@ -1,3 +1,5 @@
+dist: bionic
+
 language: bash
 
 services:
@@ -10,39 +12,40 @@ adons:
     - docker-ce
 
 env:
-- DOCKER_CLI_EXPERIMENTAL=enabled
+  global:
+  - DOCKER_CLI_EXPERIMENTAL=enabled
 
 matrix:
   include:
   - env:
+    - CONTAINER=sonarr
     - FROM=linuxserver/sonarr
-    - CONTIANER=sonarr
   - env:
+    - CONTAINER=radarr
     - FROM=linuxserver/radarr
-    - CONTIANER=radarr
   - env:
+    - CONTAINER=lidarr
     - FROM=linuxserver/lidarr
-    - CONTIANER=lidarr
   - env:
-    - FROM=linuxserver/lazylibrarian
     - CONTAINER=lazylibrarian
+    - FROM=linuxserver/lazylibrarian
   - env:
+    - CONTAINER=nzbget
     - FROM=linuxserver/nzbget
-    - CONTIANER=nzbget
   - env:
+    - CONTAINER=nzbhydra
     - FROM=linuxserver/hydra2
-    - CONTIANER=nzbhydra
   - env:
+    - CONTAINER=organizr
     - FROM=organizrtools/organizr-v2
-    - CONTIANER=organizr
   - env:
+    - CONTAINER=plex
     - FROM=linuxserver/plex
-    - CONTIANER=plex
   - env:
+    - CONTAINER=tautulli
     - FROM=linuxserver/tautulli
-    - CONTIANER=tautulli
   - env:
+    - CONTAINER=shinobi
     - FROM=
-    - CONTIANER=shinobi
 
 script: ./build.sh
