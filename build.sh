@@ -27,7 +27,7 @@ cat >/tmp/build_environment <<EOL
 FROM=${FROM}
 CONTAINER=${CONTAINER}
 EOL
-	templater -f /tmp/build_environment Dockerfile.tmpl > Dockerfile
+	templater Dockerfile.tmpl -f /tmp/build_environment > Dockerfile
 	docker buildx create --name ${CONTAINER}
 	docker buildx use ${CONTAINER}
 	docker buildx ls

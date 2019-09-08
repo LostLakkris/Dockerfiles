@@ -36,14 +36,14 @@ matrix:
     - CONTAINER=nzbhydra
     - FROM=linuxserver/hydra2
   - env:
-    - CONTAINER=organizr
-    - FROM=organizrtools/organizr-v2
-  - env:
     - CONTAINER=plex
     - FROM=linuxserver/plex
   - env:
     - CONTAINER=tautulli
     - FROM=linuxserver/tautulli
+  - env:
+    - CONTAINER=organizr
+    - FROM=
   - env:
     - CONTAINER=shinobi
     - FROM=
