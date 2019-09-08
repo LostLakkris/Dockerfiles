@@ -1,7 +1,0 @@
-FROM linuxserver/sonarr:latest
-ENV SET_URLBASE="/" \
-    SET_SERVICE="sonarr" \
-    SET_PORT="8989" \
-    SET_APIKEY=""
-
-COPY lakkris-lite/ /

@@ -1,14 +1,15 @@
 #!/bin/bash
 set -e
 echo "CONTAINER: ${CONTAINER}"
-echo "FROM: ${FROM}"
-echo "DOCKER_CLI_EXPERIMENTAL: ${DOCKER_CLI_EXPERIMENTAL}"
-docker version
 
 docker login -u "${DOCKER_USER}" -p "${DOCKER_PASSWORD}" &> /dev/null
 
-if [[ -n "${FROM}" ]]; then
+DOCKERFILE="Dockerfile.${CONTAINER}"
+
+if [[ -e "Dockerfiles/${DOCKERFILE}" ]]; then
 	echo "== Checking available origin ARCHs"
+	FROM=$(awk '/^FROM/{print $NF}' "Dockerfiles/${DOCKERFILE}")
+
 	PLATFORMS=""
 	for PLAT in $(docker manifest inspect "${FROM}" | jq -c --raw-output '.manifests[].platform'); do
 		PLAT_OS=$(echo "${PLAT}" | jq -c --raw-output '.os')
@@ -23,15 +24,14 @@ if [[ -n "${FROM}" ]]; then
 			PLATFORMS+="/${PLAT_VARIANT}"
 		fi
 	done
-cat >/tmp/build_environment <<EOL
-FROM=${FROM}
-CONTAINER=${CONTAINER}
-EOL
-	templater Dockerfile.tmpl -f /tmp/build_environment > Dockerfile
+
+	if [[ -z "${PLATFORMS}" ]]; then
+		PLATFORMS="linux/amd64"
+	fi
 	docker buildx create --name ${CONTAINER}
 	docker buildx use ${CONTAINER}
 	docker buildx ls
-	docker buildx build --platform "${PLATFORMS}" -t "lostlakkris/${CONTAINER}:latest" --push .
+	docker buildx build --platform "${PLATFORMS}" -t "lostlakkris/${CONTAINER}:latest" --push -f "Dockerfiles/${DOCKERFILE}" .
 	docker buildx imagetools inspect lostlakkris/${CONTAINER}:latest
 	docker manifest inspect lostlakkris/${CONTAINER}
 fi

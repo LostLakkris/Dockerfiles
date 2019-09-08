@@ -1,7 +1,0 @@
-FROM linuxserver/lidarr:latest
-ENV SET_URLBASE="/" \
-    SET_SERVICE="lidarr" \
-    SET_PORT="8686" \
-    SET_APIKEY=""
-
-COPY lakkris-lite/ /

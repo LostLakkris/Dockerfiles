@@ -1,0 +1,3 @@
+FROM linuxserver/lidarr:latest
+ENV SET_SERVICE="lidarr" 
+COPY lakkris-lite/ /
