@@ -10,6 +10,7 @@ adons:
     update: true
     packages:
     - docker-ce
+    - qemu-user-static
 
 env:
   global:
