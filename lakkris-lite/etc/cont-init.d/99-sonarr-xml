@@ -11,30 +11,33 @@ esac
 
 (
 	source /tmp/environment.vars
-	# Wait for the config file to be created
-	while [[ ! -d "/var/run/s6/services/${SET_SERVICE}" || ! -e /config/config.xml ]]; do
+	# Wait for the service to come up and the config file to be created
+	while [[ ! -e /config/config.xml || ! -d "/var/run/s6/services/${SET_SERVICE}" || $(s6-svstat -u "/var/run/s6/services/${SET_SERVICE}") != "true" ]]; do
 		sleep 1s
 	done
-	while [[ ! -d "/var/run/s6/services/${SET_SERVICE}" || $(s6-svstat -u "/var/run/s6/services/${SET_SERVICE}") != "true" ]]; do
-		sleep 1s
-	done
+	# Check for some known config variables to see if the files been created
 	while [[ ! -e /config/config.xml || -z "$(grep 'UrlBase' /config/config.xml)" || -z "$(grep 'Port' /config/config.xml)" || -z "$(grep 'ApiKey' /config/config.xml)" ]]; do
 		sleep 1s
 	done
+
 	# Modify config.xml and restart service if it changed
 	MD5_START=$(md5sum /config/config.xml | awk '{print $1}')
 
-	CONFIG=(
-		"s@<UrlBase>.*</UrlBase>@<UrlBase>${SET_URLBASE}</UrlBase>@g"
-		"s@<Port>.*</Port>@<Port>${SET_PORT}</Port>@g"
-	)
-	if [[ -n "${SET_APIKEY}" ]]; then
-		CONFIG+=("s@<ApiKey>.*</ApiKey>@<ApiKey>${SET_APIKEY}</ApiKey>@g")
-	fi
+	OPTIONS=( $(awk '!/Config/' /config/config.xml | sed 's@.*<\(.*\)>\(.*\)</\(.*\)>@\1@g') )
 
-	for STRING in ${CONFIG[@]}; do
-		sed -i "${STRING}" /config/config.xml
+	CONFIG=()
+	for OPTION in ${OPTIONS[@]}; do
+		ENVIRONMENT="SET_$(echo "${OPTION}" | tr '[a-z]' '[A-Z]')"
+		if [[ -n "${!ENVIRONMENT}" ]]; then
+			CONFIG+=("s@<${OPTION}>.*</${OPTION}>@<${OPTION}>${!ENVIRONMENT}</${OPTION}>@g")
+		fi
 	done
+
+	if [[ ${#CONFIG[@]} -gt 0 ]]; then
+		for STRING in ${CONFIG[@]}; do
+			sed -i "${STRING}" /config/config.xml
+		done
+	fi
 
 	MD5_END=$(md5sum /config/config.xml | awk '{print $1}')
 	if [[ "${MD5_START}" != "${MD5_END}" ]]; then
