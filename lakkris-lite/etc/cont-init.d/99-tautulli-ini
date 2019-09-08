@@ -28,7 +28,7 @@ esac
 	for OPTION in ${OPTIONS[@]}; do
 		ENVIRONMENT="SET_$(echo "${OPTION}" | tr '[a-z]' '[A-Z]')"
 		if [[ -n "${!ENVIRONMENT}" ]]; then
-			crudini --set --inplace /config/config.ini General "${OPTION}" "${!ENVIRONMENT}"
+			crudini --set /config/config.ini General "${OPTION}" "${!ENVIRONMENT}"
 		fi
 	done
 

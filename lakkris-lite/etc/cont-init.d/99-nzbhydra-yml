@@ -1,0 +1,47 @@
+#!/usr/bin/with-contenv bash
+case ${SET_SERVICE} in
+	"nzbhydra")
+		echo "== service: ${SET_SERVICE}"
+		;;
+	*)
+		echo "== Not a sonarr-derivative."
+		exit 0;
+		;;
+esac
+
+(
+	source /tmp/environment.vars
+	# Wait for the service to come up and the config file to be created
+	while [[ ! -e /config/nzbhydra.yml || ! -d "/var/run/s6/services/nzbhydra2" || $(s6-svstat -u "/var/run/s6/services/nzbhydra2") != "true" ]]; do
+		sleep 1s
+	done
+	# Check for some known config variables to see if the files been created
+	while [[ ! -e /config/nzbhydra.yml || -z "$(grep 'urlBase' /config/nzbhydra.yml)" || -z "$(grep 'port' /config/nzbhydra.yml)" || -z "$(grep 'apiKey' /config/nzbhydra.yml)" ]]; do
+		sleep 1s
+	done
+
+	# Modify nzbhydra.yml and restart service if it changed
+	MD5_START=$(md5sum /config/nzbhydra.yml | awk '{print $1}')
+
+	OPTIONS=( $(yq -c --raw-output '.main|keys[]' /config/nzbhydra.yml) )
+
+	for OPTION in ${OPTIONS[@]}; do
+		ENVIRONMENT="SET_$(echo "${OPTION}" | tr '[a-z]' '[A-Z]')"
+		if [[ -n "${!ENVIRONMENT}" ]]; then
+			if [[ ! -e /tmp/nzbhydra.yml ]]; then
+				cp /config/nzbhydra.yml /tmp/nzbhydra.yml
+			fi
+			yq -y --arg opt "${OPTION}" --arg val "${!ENVIRONMENT}" '.main[$opt]=$val' /tmp/nzbhydra.yml > /tmp/nzbhydra.yml.2
+			mv /tmp/nzbhydra.yml.2 /tmp/nzbhydra.yml
+		fi
+	done
+
+	MD5_END=$(md5sum /tmp/nzbhydra.yml | awk '{print $1}')
+	if [[ "${MD5_START}" != "${MD5_END}" ]]; then
+		s6-svc -wD -d "/var/run/s6/services/nzbhydra2"
+		s6-svwait -d "/var/run/s6/services/nzbhydra2"
+		mv /tmp/nzbhydra.yml /config/nzbhydra.yml
+		s6-svc -wU -u "/var/run/s6/services/nzbhydra2"
+		s6-svwait -u "/var/run/s6/services/nzbhydra2"
+	fi
+) &
