@@ -1,16 +1,4 @@
 FROM linuxserver/lazylibrarian:latest
-ENV LAKKRIS_SERVICE="lazylibrarian" \
-    LAKKRIS_CONTENT="books" \
-    LAKKRIS_ICON="plugins/images/tabs/lazylibrarian.png" \
-    LAKKRIS_PORT="5299" \
-    LAKKRIS_CONFIGFILE="/config/config.ini" \
-    LAKKRIS_SERVERNAME="lostlakkris"
-
-EXPOSE 7946
-
-COPY bin/serf_0.8.1_amd64 /usr/sbin/serf
-COPY bin/jq_1.6_amd64 /usr/sbin/jq
-COPY bin/templater /usr/sbin/templater
-#COPY bin/nc_1.27.1_686 /usr/bin/nc
-
-COPY lakkris/ /
+ENV SET_SERVICE="lazylibrarian"
+RUN pip install --no-cache-dir -U crudini
+COPY lakkris-lite/ /
