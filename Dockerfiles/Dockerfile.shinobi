@@ -69,17 +69,5 @@ EXPOSE 8080
 COPY shinobi/ /
 
 # Lakkris common
-ENV LAKKRIS_SERVICE="shinobi" \
-    LAKKRIS_ICON="" \
-    LAKKRIS_PORT="8080" \
-    LAKKRIS_CONFIGFILE="/config/shinobi/conf.json" \
-    LAKKRIS_SERVERNAME="lostlakkris"
-
-EXPOSE 7946
-
-COPY bin/serf_0.8.1_amd64 /usr/sbin/serf
-COPY bin/jq_1.6_amd64 /usr/sbin/jq
-COPY bin/templater /usr/sbin/templater
-#COPY bin/inotifyd_1.27.1_686 /sbin/inotifyd
-
-COPY lakkris/ /
+ENV SET_SERVICE="shinobi"
+COPY lakkris-lite/ /
