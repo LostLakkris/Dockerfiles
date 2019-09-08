@@ -34,5 +34,5 @@ deploy_script:
     for z in $(ls -1 Dockerfiles/*.amd64); do
       x=$(echo "${z}" | cut -d'/' -f2-)
       echo ${x}
-      docker push "lostlakkris/${x%.*}"
+#      docker push "lostlakkris/${x%.*}"
     done
