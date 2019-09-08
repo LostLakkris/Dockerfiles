@@ -1,9 +1,11 @@
 #!/bin/bash
-set -ev
+set -e
 echo "CONTAINER: ${CONTAINER}"
 echo "FROM: ${FROM}"
 echo "DOCKER_CLI_EXPERIMENTAL: ${DOCKER_CLI_EXPERIMENTAL}"
 docker version
+
+docker login -u "${DOCKER_USER}" -p "${DOCKER_PASSWORD}" &> /dev/null
 
 if [[ -n "${FROM}" ]]; then
 	echo "== Checking available origin ARCHs"
@@ -25,8 +27,7 @@ if [[ -n "${FROM}" ]]; then
 	docker buildx create --name ${CONTAINER}
 	docker buildx use ${CONTAINER}
 	docker buildx ls
-#	docker buildx build --platform "${PLATFORMS}" -t "lostlakkris/${CONTAINER}:latest" --push .
-#	docker buildx imagetools inspect docker.io/lostlakkris/${CONTAINER}:latest
-	docker buildx build --platform "${PLATFORMS}" -t "lostlakkris/${CONTAINER}:latest" .
+	docker buildx build --platform "${PLATFORMS}" -t "lostlakkris/${CONTAINER}:latest" --push .
 	docker buildx imagetools inspect lostlakkris/${CONTAINER}:latest
+	docker manifest inspect lostlakkris/${CONTAINER}
 fi
