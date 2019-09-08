@@ -1,0 +1,39 @@
+#!/usr/bin/with-contenv bash
+case ${SET_SERVICE} in
+	"tautulli")
+		echo "== service: ${SET_SERVICE}"
+		;;
+	*)
+		echo "== Not a tautulli-derivative."
+		exit 0;
+		;;
+esac
+
+(
+	source /tmp/environment.vars
+	# Wait for the service to come up and the config file to be created
+	while [[ ! -e /config/config.ini || ! -d "/var/run/s6/services/${SET_SERVICE}" || $(s6-svstat -u "/var/run/s6/services/${SET_SERVICE}") != "true" ]]; do
+		sleep 1s
+	done
+	# Check for some known config variables to see if the files been created
+	while [[ ! -e /config/config.ini || -z "$(grep 'http_root' /config/config.ini)" || -z "$(grep 'http_port' /config/config.ini)" || -z "$(grep 'api_key' /config/config.ini)" ]]; do
+		sleep 1s
+	done
+
+	# Modify config.ini and restart service if it changed
+	MD5_START=$(md5sum /config/config.ini | awk '{print $1}')
+
+	OPTIONS=( $(crudini --get General /config/config.ini) )
+
+	for OPTION in ${OPTIONS[@]}; do
+		ENVIRONMENT="SET_$(echo "${OPTION}" | tr '[a-z]' '[A-Z]')"
+		if [[ -n "${!ENVIRONMENT}" ]]; then
+			crudini --set --inplace /config/config.ini General "${OPTION}" "${!ENVIRONMENT}"
+		fi
+	done
+
+	MD5_END=$(md5sum /config/config.ini | awk '{print $1}')
+	if [[ "${MD5_START}" != "${MD5_END}" ]]; then
+		s6-svc -h "/var/run/s6/services/${SET_SERVICE}"
+	fi
+) &

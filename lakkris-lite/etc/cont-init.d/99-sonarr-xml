@@ -25,19 +25,20 @@ esac
 
 	OPTIONS=( $(awk '!/Config/' /config/config.xml | sed 's@.*<\(.*\)>\(.*\)</\(.*\)>@\1@g') )
 
-	CONFIG=()
+#	CONFIG=()
 	for OPTION in ${OPTIONS[@]}; do
 		ENVIRONMENT="SET_$(echo "${OPTION}" | tr '[a-z]' '[A-Z]')"
 		if [[ -n "${!ENVIRONMENT}" ]]; then
-			CONFIG+=("s@<${OPTION}>.*</${OPTION}>@<${OPTION}>${!ENVIRONMENT}</${OPTION}>@g")
+			sed -i "s@<${OPTION}>.*</${OPTION}>@<${OPTION}>${!ENVIRONMENT}</${OPTION}>@g" /config/config.xml
+#			CONFIG+=("s@<${OPTION}>.*</${OPTION}>@<${OPTION}>${!ENVIRONMENT}</${OPTION}>@g")
 		fi
 	done
 
-	if [[ ${#CONFIG[@]} -gt 0 ]]; then
-		for STRING in ${CONFIG[@]}; do
-			sed -i "${STRING}" /config/config.xml
-		done
-	fi
+#	if [[ ${#CONFIG[@]} -gt 0 ]]; then
+#		for STRING in ${CONFIG[@]}; do
+#			sed -i "${STRING}" /config/config.xml
+#		done
+#	fi
 
 	MD5_END=$(md5sum /config/config.xml | awk '{print $1}')
 	if [[ "${MD5_START}" != "${MD5_END}" ]]; then
