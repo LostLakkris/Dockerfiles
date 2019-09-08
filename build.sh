@@ -23,7 +23,11 @@ if [[ -n "${FROM}" ]]; then
 			PLATFORMS+="/${PLAT_VARIANT}"
 		fi
 	done
-	FROM=${FROM} templater Dockerfile.tmpl > Dockerfile
+cat >/tmp/build_environment <<EOL
+FROM=${FROM}
+CONTAINER=${CONTAINER}
+EOL
+	templater -f /tmp/build_environment Dockerfile.tmpl > Dockerfile
 	docker buildx create --name ${CONTAINER}
 	docker buildx use ${CONTAINER}
 	docker buildx ls
