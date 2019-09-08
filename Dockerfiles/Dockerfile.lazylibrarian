@@ -1,4 +1,4 @@
 FROM linuxserver/lazylibrarian:latest
 ENV SET_SERVICE="lazylibrarian"
-RUN pip install --no-cache-dir -U crudini
+RUN pip3 install --no-cache-dir -U crudini
 COPY lakkris-lite/ /
