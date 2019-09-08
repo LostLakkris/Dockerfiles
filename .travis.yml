@@ -24,8 +24,8 @@ env:
   - CONTAINER=nzbhydra
   - CONTAINER=tautulli
   - CONTAINER=plex
-  - CONTAINER=shinobi
   - CONTAINER=organizr
+#  - CONTAINER=shinobi
 
 before_install:
 - echo '{"experimental":true}' | sudo tee /etc/docker/daemon.json
