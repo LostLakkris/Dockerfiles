@@ -5,7 +5,7 @@ language: bash
 services:
 - docker
 
-adons:
+addons:
   apt:
     update: true
     packages:
