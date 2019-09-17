@@ -68,8 +68,8 @@ VOLUME ["/var/lib/mysql"]
 
 EXPOSE 8080
 
-COPY shinobi/ /
+COPY s6.shinobi/ /
 
 # Lakkris common
 ENV SET_SERVICE="shinobi"
-COPY lakkris-lite/ /
+COPY s6.lakkris/ /

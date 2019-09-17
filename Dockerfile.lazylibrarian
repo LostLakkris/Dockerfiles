@@ -6,4 +6,4 @@ RUN apt-get update && \
     apt-get -y purge python3-pip && \
     apt-get -y autoremove && \
     rm -rf /var/lib/apt/lists/*
-COPY lakkris-lite/ /
+COPY s6.lakkris/ /

@@ -1,0 +1,6 @@
+#!/bin/bash
+echo "[***] images"
+docker images -a
+echo "[***] push - shim?"
+docker push "${DOCKER_REPO}"
+#docker manifest push "${DOCKER_REPO}"

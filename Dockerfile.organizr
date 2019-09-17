@@ -1,0 +1,3 @@
+FROM organizrtools/organizr-v2:latest
+ENV SET_SERVICE="organizr"
+COPY s6.lakkris/ /

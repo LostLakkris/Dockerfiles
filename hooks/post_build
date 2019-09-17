@@ -1,0 +1,4 @@
+#!/bin/bash
+export DOCKER_CLI_EXPERIMENTAL=enabled
+docker manifest inspect "${DOCKER_REPO}"
+docker buildx imagetools inspect "${DOCKER_REPO}"

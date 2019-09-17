@@ -1,0 +1,37 @@
+#!/bin/bash
+export DOCKER_CLI_EXPERIMENTAL=enabled
+echo "[***] build - Trying to use docker buildx to construct the images instead."
+
+FROM=$(awk '/^FROM/{print $NF}' "${DOCKERFILE_PATH}" | tail -n 1)
+
+echo "[***] build - Identifying origin platforms for reuse."
+PLATFORMS=""
+for PLAT in $(docker manifest inspect "${FROM}" | jq -c --raw-output '.manifests[].platform'); do
+	PLAT_OS=$(echo "${PLAT}" | jq -c --raw-output '.os')
+	PLAT_ARCH=$(echo "${PLAT}" | jq -c --raw-output '.architecture')
+	PLAT_VARIANT=$(echo "${PLAT}" | jq -c --raw-output '.variant')
+	echo "Detected remote: ${PLAT_OS} - ${PLAT_ARCH}"
+	if [[ -n "${PLATFORMS}" ]]; then
+		PLATFORMS+=","
+	fi
+	PLATFORMS+="${PLAT_OS}/${PLAT_ARCH}"
+	if [[ -n "${PLAT_VARIANT}" && "${PLAT_VARIANT}" != "null" ]]; then
+		PLATFORMS+="/${PLAT_VARIANT}"
+	fi
+done
+if [[ -z "${PLATFORMS}" ]]; then
+	PLATFORMS="linux/amd64"
+fi
+
+#echo "[***] build - Create and use buildx context"
+#docker buildx create --name ${DOCKER_REPO#**/}
+#docker buildx use ${DOCKER_REPO#**/}
+docker buildx ls
+echo "[***] build - Starting build+push of '${DOCKERFILE_PATH}' to '${IMAGE_NAME#*/}'"
+#docker buildx build --platform "${PLATFORMS}" -t "${IMAGE_NAME#*/}" -f "${DOCKERFILE_PATH}" --push .
+docker buildx build -o type=tar,dest=build.tar --platform "${PLATFORMS}" -t "${IMAGE_NAME#*/}" -f "${DOCKERFILE_PATH}" .
+ls -l .
+tar --list --verbose --file=build.tar
+echo "[***] build - Inspect whats currently published"
+docker manifest inspect "${DOCKER_REPO}"
+docker buildx imagetools inspect "${DOCKER_REPO}"

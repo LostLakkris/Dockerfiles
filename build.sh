@@ -4,11 +4,11 @@ echo "CONTAINER: ${CONTAINER}"
 
 docker login -u "${DOCKER_USER}" -p "${DOCKER_PASSWORD}" &> /dev/null
 
-DOCKERFILE="Dockerfile.${CONTAINER}"
+DOCKERFILE="${CONTAINER}"
 
-if [[ -e "Dockerfiles/${DOCKERFILE}" ]]; then
+if [[ -e "Dockerfile.${DOCKERFILE}" ]]; then
 	echo "== Checking available origin ARCHs"
-	FROM=$(awk '/^FROM/{print $NF}' "Dockerfiles/${DOCKERFILE}")
+	FROM=$(awk '/^FROM/{print $NF}' "Dockerfile.${DOCKERFILE}")
 
 	PLATFORMS=""
 	for PLAT in $(docker manifest inspect "${FROM}" | jq -c --raw-output '.manifests[].platform'); do
@@ -31,7 +31,7 @@ if [[ -e "Dockerfiles/${DOCKERFILE}" ]]; then
 	docker buildx create --name ${CONTAINER}
 	docker buildx use ${CONTAINER}
 	docker buildx ls
-	docker buildx build --platform "${PLATFORMS}" -t "lostlakkris/${CONTAINER}:latest" --push -f "Dockerfiles/${DOCKERFILE}" .
+	docker buildx build --platform "${PLATFORMS}" -t "lostlakkris/${CONTAINER}:latest" --push -f "Dockerfile.${DOCKERFILE}" .
 	docker buildx imagetools inspect lostlakkris/${CONTAINER}:latest
 	docker manifest inspect lostlakkris/${CONTAINER}
 fi

@@ -8,13 +8,19 @@ services:
 addons:
   apt:
     update: true
+    sources:
+    - sourceline: "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
+      key_url: https://download.docker.com/linux/ubuntu/gpg
     packages:
     - docker-ce
-    - qemu-user-static
+    - docker-ce-cli
+    - containerd.io
+    - jq
 
 env:
   global:
   - DOCKER_CLI_EXPERIMENTAL=enabled
+  - DOCKER_ORG=lostlakkris
   matrix:
   - CONTAINER=sonarr
   - CONTAINER=radarr
@@ -29,13 +35,16 @@ env:
 
 before_install:
 - echo '{"experimental":true}' | sudo tee /etc/docker/daemon.json
-- curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-- sudo add-apt-repository -y "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-- sudo apt-get update -q
-- sudo apt-get install -y docker-ce docker-ce-cli containerd.io
-- sudo apt-get install -y qemu-user-static
-- sudo docker run --rm --privileged multiarch/qemu-user-static:register
-- sudo docker run --privileged linuxkit/binfmt:v0.6
+
+before_script:
+- sudo bash hooks/pre_build
 
 script:
-- ./build.sh
+- docker login -u "${DOCKER_USER}" -p "${DOCKER_PASSWORD}" &> /dev/null
+- export DOCKERFILE_PATH=Dockerfile.${CONTAINER}
+- export DOCKER_REPO=index.docker.io/${DOCKER_ORG}/${CONTAINER}
+- export DOCKER_TAG=latest
+- export IMAGE_NAME=${DOCKER_REPO}:${DOCKER_TAG}
+- bash hooks/build
+- bash hooks/post_build
+- bash hooks/push
