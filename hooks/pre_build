@@ -6,6 +6,7 @@ apt-get update -qq
 apt-get install -y jq
 mkdir -p /etc/docker /root/.docker
 
+# Nightmare to ensure experimental is enabled, though the environment variable should cover most of it...
 if [[ -e "/root/.dockercfg" && ! -e "/root/.docker/config.json" ]]; then
 	ln -s /root/.dockercfg /root/.docker/config.json
 	jq '.experimental="enabled"' "/root/.dockercfg" > "/root/.dockercfg.2"
@@ -32,7 +33,7 @@ cat /etc/*-release
 
 echo "[***] Updating whichever docker is present"
 if [[ -n "$(which docker)" ]]; then
-	apt-get install -y $(dpkg -S $(which docker) | cut -d':' -f1)
+	apt-get install -y $(dpkg -S $(which docker) | cut -d':' -f1) $(dpkg -S $(which docker) | cut -d':' -f1)-cli containerd.io
 else
 	apt-get install -y docker-de docker-ce-cli containerd.io
 fi

@@ -46,5 +46,4 @@ script:
 - export DOCKER_TAG=latest
 - export IMAGE_NAME=${DOCKER_REPO}:${DOCKER_TAG}
 - bash hooks/build
-- bash hooks/post_build
 - bash hooks/push

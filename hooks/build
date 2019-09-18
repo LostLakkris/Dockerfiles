@@ -23,15 +23,14 @@ if [[ -z "${PLATFORMS}" ]]; then
 	PLATFORMS="linux/amd64"
 fi
 
-#echo "[***] build - Create and use buildx context"
-#docker buildx create --name ${DOCKER_REPO#**/}
-#docker buildx use ${DOCKER_REPO#**/}
+echo "[***] build - Create and use buildx context"
+docker buildx create --name $(echo ${DOCKER_REPO} | awk -F '/' '{print $NF}')
+docker buildx use $(echo ${DOCKER_REPO} | awk -F '/' '{print $NF}')
 docker buildx ls
+
 echo "[***] build - Starting build+push of '${DOCKERFILE_PATH}' to '${IMAGE_NAME#*/}'"
-#docker buildx build --platform "${PLATFORMS}" -t "${IMAGE_NAME#*/}" -f "${DOCKERFILE_PATH}" --push .
-docker buildx build -o type=tar,dest=build.tar --platform "${PLATFORMS}" -t "${IMAGE_NAME#*/}" -f "${DOCKERFILE_PATH}" .
-ls -l .
-tar --list --verbose --file=build.tar
+docker buildx build --platform "${PLATFORMS}" -t "${IMAGE_NAME#*/}" -f "${DOCKERFILE_PATH}" --push .
+
 echo "[***] build - Inspect whats currently published"
 docker manifest inspect "${DOCKER_REPO}"
 docker buildx imagetools inspect "${DOCKER_REPO}"

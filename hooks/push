@@ -1,0 +1,6 @@
+#!/bin/bash
+#echo "[***] images"
+#docker images -a
+echo "[***] push - passing shim, build autodeployed on completion"
+#docker push "${DOCKER_REPO}"
+#docker manifest push "${DOCKER_REPO}"
