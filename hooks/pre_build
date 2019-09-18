@@ -33,9 +33,14 @@ cat /etc/*-release
 
 echo "[***] Updating whichever docker is present"
 if [[ -n "$(which docker)" ]]; then
-	apt-get install -y $(dpkg -S $(which docker) | cut -d':' -f1) $(dpkg -S $(which docker) | cut -d':' -f1)-cli containerd.io
+	DOCKER_PKG=$(dpkg -S $(which docker) | cut -d':' -f1)
+	DOCKER_EXTRA="${DOCKER_PKG}-cli"
+	if [[ ${DOCKER_PKG} == *cli ]]; then
+		DOCKER_EXTRA=$(echo ${DOCKER_PKG} | cut -f2)
+	fi
+	apt-get install -y ${DOCKER_PKG} ${DOCKER_EXTRA} containerd.io
 else
-	apt-get install -y docker-de docker-ce-cli containerd.io
+	apt-get install -y docker-ce docker-ce-cli containerd.io
 fi
 
 echo "[***] Adding qemu-user-static container, and binfmt"
