@@ -5,34 +5,38 @@ image:
 - Ubuntu1804
 
 environment:
+  global:
+    DOCKER_CLI_EXPERIMENTAL: enabled
+    DOCKER_ORG: lostlakkris
+    DOCKER_USER:
+      secure: TJfOg4mQbXKqm629vAB2Gw==
+    DOCKER_PASSWORD:
+      secure: xeG9nOJrO9D//Wv8/gvLPg==
   matrix:
-    - ARCH: amd64
-  docker_user:
-    secure: TJfOg4mQbXKqm629vAB2Gw==
-  docker_password:
-    secure: xeG9nOJrO9D//Wv8/gvLPg==
+  - CONTAINER: sonarr
+  - CONTAINER: radarr
+  - CONTAINER: lidarr
+  - CONTAINER: lazylibrarian
+  - CONTAINER: nzbget
+  - CONTAINER: nzbhydra
+  - CONTAINER: tautulli
+  - CONTAINER: plex
+  - CONTAINER: organizr
+#  - CONTAINER: shinobi
 
 skip_commits:
   files:
     - '*.md'
 
-build_script:
-- sh: >-
-    for z in $(ls -1 Dockerfiles/*.amd64); do
-      x=$(echo "${z}" | cut -d'/' -f2-)
-      echo ${x}
-      docker build --pull --no-cache -t "lostlakkris/${x%.*}:latest" -t "lostlakkris/${x%.*}:${ARCH}" -f ${z} .
-      if [ $? -ne 0 ]; then
-        exit 2
-      fi
-    done
+install:
+- echo '{"experimental":true}' | sudo tee /etc/docker/daemon.json
+- sudo bash hooks/pre_build
 
-#test_script:
-deploy_script:
-- sh: docker login -u ${docker_user} -p ${docker_password}
-- sh: >-
-    for z in $(ls -1 Dockerfiles/*.amd64); do
-      x=$(echo "${z}" | cut -d'/' -f2-)
-      echo ${x}
-#      docker push "lostlakkris/${x%.*}"
-    done
+build_script:
+- docker login -u "${DOCKER_USER}" -p "${DOCKER_PASSWORD}" &> /dev/null
+- export DOCKERFILE_PATH=Dockerfile.${CONTAINER}
+- export DOCKER_REPO=index.docker.io/${DOCKER_ORG}/${CONTAINER}
+- export DOCKER_TAG=latest
+- export IMAGE_NAME=${DOCKER_REPO}:${DOCKER_TAG}
+- bash hooks/build
+- bash hooks/push
