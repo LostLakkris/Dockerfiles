@@ -32,6 +32,7 @@ env:
   - CONTAINER=plex
   - CONTAINER=organizr
 #  - CONTAINER=shinobi
+#  - CONTAINER=serf
 
 before_install:
 - echo '{"experimental":true}' | sudo tee /etc/docker/daemon.json
