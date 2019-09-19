@@ -3,12 +3,12 @@
 	source /tmp/environment.vars
 	case ${SET_SERVICE} in
 		"nzbhydra")
-			echo "== service: ${SET_SERVICE}"
+			echo "[lakkris] service: ${SET_SERVICE}"
 			YML_FILE="/config/nzbhydra.yml"
 			SET_SERVICE='nzbhydra2'
 			;;
 		*)
-			echo "== Not a sonarr-derivative."
+			echo "[lakkris] Not a yml-based configuration."
 			exit 0;
 			;;
 	esac
@@ -29,6 +29,7 @@
 	for OPTION in ${OPTIONS[@]}; do
 		ENVIRONMENT="SET_$(echo "${OPTION}" | tr '[a-z]' '[A-Z]')"
 		if [[ -n "${!ENVIRONMENT}" ]]; then
+			echo "[lakkris] Config override detected: ${OPTION}"
 			if [[ ! -e /tmp/svc_${SET_SERVICE}.yml ]]; then
 				cp ${YML_FILE} /tmp/svc_${SET_SERVICE}.yml
 			fi

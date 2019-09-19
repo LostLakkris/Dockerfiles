@@ -3,11 +3,11 @@
 	source /tmp/environment.vars
 	case ${SET_SERVICE} in
 		"sonarr"|"radarr"|"lidarr")
-			echo "== service: ${SET_SERVICE}"
+			echo "[lakkris] service: ${SET_SERVICE}"
 			XML_FILE="/config/config.xml"
 			;;
 		*)
-			echo "== Not an xml-based configuration."
+			echo "[lakkris] Not an xml-based configuration."
 			exit 0;
 			;;
 	esac
@@ -29,6 +29,7 @@
 	for OPTION in ${OPTIONS[@]}; do
 		ENVIRONMENT="SET_$(echo "${OPTION}" | tr '[a-z]' '[A-Z]')"
 		if [[ -n "${!ENVIRONMENT}" ]]; then
+			echo "[lakkris] Config override detected: ${OPTION}"
 			sed -i "s@<${OPTION}>.*</${OPTION}>@<${OPTION}>${!ENVIRONMENT}</${OPTION}>@g" ${XML_FILE}
 		fi
 	done
