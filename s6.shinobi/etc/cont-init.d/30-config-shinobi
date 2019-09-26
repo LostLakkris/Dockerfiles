@@ -13,12 +13,12 @@ for x in 'conf' 'super'; do
 done
 
 # Motion
-if [[ ! -e /config/shinobi/motion.conf ]]; then
-	cp /opt/shinobi/plugins/motion/conf.sample.json /config/shinobi/motion.json
-fi
-if [[ ! -e /opt/shinobi/plugins/motion/conf.json ]]; then
-	ln -s /config/shinobi/motion.json /opt/shinobi/plugins/motion/conf.json
-fi
+#if [[ ! -e /config/shinobi/motion.conf ]]; then
+#	cp /opt/shinobi/plugins/motion/conf.sample.json /config/shinobi/motion.json
+#fi
+#if [[ ! -e /opt/shinobi/plugins/motion/conf.json ]]; then
+#	ln -s /config/shinobi/motion.json /opt/shinobi/plugins/motion/conf.json
+#fi
 
 PWD=$(pwd)
 cd /opt/shinobi && git pull -q

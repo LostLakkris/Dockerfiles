@@ -22,16 +22,16 @@ env:
   - DOCKER_CLI_EXPERIMENTAL=enabled
   - DOCKER_ORG=lostlakkris
   matrix:
+  - CONTAINER=shinobi
+  - CONTAINER=organizr
   - CONTAINER=sonarr
   - CONTAINER=radarr
   - CONTAINER=lidarr
+  - CONTAINER=plex
+  - CONTAINER=tautulli
   - CONTAINER=lazylibrarian
   - CONTAINER=nzbget
   - CONTAINER=nzbhydra
-  - CONTAINER=tautulli
-  - CONTAINER=plex
-  - CONTAINER=organizr
-#  - CONTAINER=shinobi
 #  - CONTAINER=serf
 
 before_install:
