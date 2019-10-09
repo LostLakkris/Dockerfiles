@@ -1,3 +1,6 @@
 FROM linuxserver/lidarr:latest
-ENV SET_SERVICE="lidarr" 
+ENV SET_SERVICE="lidarr" \
+    LOSTLAKKRIS_CONTENT="music"
+LABEL "lostlakkris.service"="lidarr" \
+      "lostlakkris.content"="music"
 COPY s6.lakkris/ /

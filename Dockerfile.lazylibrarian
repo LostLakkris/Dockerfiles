@@ -1,5 +1,8 @@
 FROM linuxserver/lazylibrarian:latest
-ENV SET_SERVICE="lazylibrarian"
+ENV SET_SERVICE="lazylibrarian" \
+    LOSTLAKKRIS_CONTENT="books"
+LABEL "lostlakkris.service"="lazylibrarian" \
+      "lostlakkris.content"="books"
 RUN apt-get update && \
     apt-get install -y python3-pip && \
     pip3 install --no-cache-dir -U crudini && \

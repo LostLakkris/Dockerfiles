@@ -1,4 +1,5 @@
 FROM linuxserver/tautulli:latest
 ENV SET_SERVICE="tautulli"
+LABEL "lostlakkris.service"="tautulli"
 RUN pip install --no-cache-dir -U crudini
 COPY s6.lakkris/ /

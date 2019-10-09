@@ -1,3 +1,4 @@
 FROM linuxserver/nzbget:latest
 ENV SET_SERVICE="nzbget"
+LABEL "lostlakkris.service"="nzbget"
 COPY s6.lakkris/ /

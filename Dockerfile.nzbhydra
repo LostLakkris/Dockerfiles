@@ -1,5 +1,6 @@
 FROM linuxserver/hydra2:latest
 ENV SET_SERVICE="nzbhydra"
+LABEL "lostlakkris.service"="nzbhydra"
 RUN apt-get update -y && \
     apt-get install -y jq python-pip && \
     pip install yq && \

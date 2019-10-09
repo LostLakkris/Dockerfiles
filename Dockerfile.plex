@@ -1,3 +1,4 @@
 FROM linuxserver/plex:latest
 ENV SET_SERVICE="plex"
+LABEL "lostlakkris.service"="plex"
 COPY s6.lakkris/ /

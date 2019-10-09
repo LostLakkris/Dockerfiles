@@ -1,3 +1,6 @@
 FROM linuxserver/radarr:latest
-ENV SET_SERVICE="radarr"
+ENV SET_SERVICE="radarr" \
+    LOSTLAKKRIS_CONTENT="movies"
+LABEL "lostlakkris.service"="radarr" \
+      "lostlakkris.content"="movies"
 COPY s6.lakkris/ /

@@ -21,4 +21,5 @@ EXPOSE 8080
 COPY s6.shinobi/ /
 
 ENV SET_SERVICE="shinobi"
+LABEL "lostlakkris.service"="shinobi"
 COPY s6.lakkris/ /

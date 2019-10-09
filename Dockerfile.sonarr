@@ -1,3 +1,6 @@
 FROM linuxserver/sonarr:latest
-ENV SET_SERVICE="sonarr"
+ENV SET_SERVICE="sonarr" \
+    LOSTLAKKRIS_CONTENT="tv"
+LABEL "lostlakkris.service"="sonarr" \
+      "lostlakkris.content"="tv"
 COPY s6.lakkris/ /
