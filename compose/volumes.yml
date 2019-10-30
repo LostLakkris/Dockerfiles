@@ -1,0 +1,5 @@
+version: '3'
+
+volumes:
+  media_volume:
+  download_volume:

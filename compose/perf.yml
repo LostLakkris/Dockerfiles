@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  netdata:
+    image: netdata/netdata
+    restart: always
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock:ro
+    - /proc:/host/proc:ro
+    - /sys:/host/sys:ro
+    hostname: "${HOSTNAME}"
+    ports:
+    - "${NETDATA_IP}:19999:19999"
+    cap_add:
+    - SYS_PTRACE
+    security_opt:
+    - apparmor:unconfined
+

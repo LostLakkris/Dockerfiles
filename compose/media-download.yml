@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  nzbget:
+    image: lostlakkris/nzbget
+    restart: always
+    expose:
+    - "6789"
+    volumes:
+    - /etc/localtime:/etc/localtime:ro
+    - "${CONFIG_DIR}/nzbget:/config"
+    - "download_volume:/downloads"
+    environment:
+      PUID: "${PUID:-1000}"
+      PGID: "${PGID:-1000}"
+  nzbhydra:
+    image: lostlakkris/nzbhydra
+    restart: always
+    expose:
+    - "5076"
+    volumes:
+    - /etc/localtime:/etc/localtime:ro
+    - "${CONFIG_DIR}/nzbhydra:/config"
+    - "download_volume:/downloads"
+    environment:
+      PUID: "${PUID:-1000}"
+      PGID: "${PGID:-1000}"
+      SET_URLBASE: "${WEB_PREFIX:-}/nzbhydra"

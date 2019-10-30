@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  plex:
+#    image: plexinc/pms-docker:plexpass
+    image: lostlakkris/plex
+    network_mode: host
+    restart: always
+    volumes:
+    - /etc/localtime:/etc/localtime:ro
+    - "${CONFIG_DIR}/plex:/config"
+    - "media_volume:/media"
+    environment:
+      PUID: "${PUID:-1000}"
+      PGID: "${PGID:-1000}"
+      HOSTNAME: "${PLEX_HOSTNAME:-lostlakkris}"
+  tautulli:
+    image: lostlakkris/tautulli
+    restart: always
+    volumes:
+    - /etc/localtime:/etc/localtime:ro
+    - "${CONFIG_DIR}/tautulli:/config"
+    - "${CONFIG_DIR}/plex/Library/Application Support/Plex Media Server/Logs:/logs:ro"
+    environment:
+      PUID: "${PUID:-1000}"
+      PGID: "${PGID:-1000}"
+      SET_URLBASE: "${WEB_PREFIX:-}/sonarr"
+## TODO
+#  samba:

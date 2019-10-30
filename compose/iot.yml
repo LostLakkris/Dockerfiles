@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  hass:
+    image: homeassistant/home-assistant:stable
+    restart: always
+    volumes:
+    - /etc/localtime:/etc/localtime:ro
+    - "${CONFIG_DIR}/hass:/config"
+    environment:
+    - "TZ=${TZ}"
+    network_mode: host
