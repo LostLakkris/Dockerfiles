@@ -1,6 +1,10 @@
 FROM linuxserver/lidarr:latest
 ENV SET_SERVICE="lidarr" \
+    SET_PORT="8686" \
     LOSTLAKKRIS_CONTENT="music"
 LABEL "lostlakkris.service"="lidarr" \
       "lostlakkris.content"="music"
 COPY s6.lakkris/ /
+
+HEALTHCHECK --interval=5m --timeout=3s \
+  CMD /scripts/healthcheck.sh || exit 1

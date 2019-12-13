@@ -25,10 +25,10 @@ cd /opt/shinobi && git pull -q
 cd $PWD
 
 chown -R abc:abc \
-	/opt/shinobi
+	/opt/shinobi/*
 
 chown -R abc:abc \
-	/config/shinobi
+	/config/shinobi/*
 
 if [[ ! -d /dev/shm/streams ]]; then
 	mkdir /dev/shm/streams

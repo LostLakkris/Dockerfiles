@@ -20,6 +20,10 @@ EXPOSE 8080
 
 COPY s6.shinobi/ /
 
-ENV SET_SERVICE="shinobi"
+ENV SET_SERVICE="shinobi" \
+    SET_PORT="8080"
 LABEL "lostlakkris.service"="shinobi"
 COPY s6.lakkris/ /
+
+HEALTHCHECK --interval=5m --timeout=3s \
+  CMD /scripts/healthcheck.sh || exit 1

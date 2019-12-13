@@ -1,5 +1,6 @@
 FROM linuxserver/hydra2:latest
-ENV SET_SERVICE="nzbhydra"
+ENV SET_SERVICE="nzbhydra" \
+    SET_PORT="5076"
 LABEL "lostlakkris.service"="nzbhydra"
 RUN apt-get update -y && \
     apt-get install -y jq python-pip && \
@@ -8,3 +9,6 @@ RUN apt-get update -y && \
     apt-get -y autoremove && \
     rm -rf /var/lib/apt/lists/*
 COPY s6.lakkris/ /
+
+HEALTHCHECK --interval=5m --timeout=3s \
+  CMD /scripts/healthcheck.sh || exit 1

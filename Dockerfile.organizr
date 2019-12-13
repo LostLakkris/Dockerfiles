@@ -2,3 +2,6 @@ FROM organizrtools/organizr-v2:latest
 ENV SET_SERVICE="organizr"
 LABEL "lostlakkris.service"="organizr"
 COPY s6.lakkris/ /
+
+HEALTHCHECK --interval=5m --timeout=3s \
+  CMD /scripts/healthcheck.sh || exit 1

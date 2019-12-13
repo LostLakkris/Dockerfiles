@@ -1,6 +1,10 @@
 FROM linuxserver/sonarr:latest
 ENV SET_SERVICE="sonarr" \
+    SET_PORT="8989" \
     LOSTLAKKRIS_CONTENT="tv"
 LABEL "lostlakkris.service"="sonarr" \
       "lostlakkris.content"="tv"
 COPY s6.lakkris/ /
+
+HEALTHCHECK --interval=5m --timeout=3s \
+  CMD /scripts/healthcheck.sh || exit 1

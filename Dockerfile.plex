@@ -2,3 +2,6 @@ FROM linuxserver/plex:latest
 ENV SET_SERVICE="plex"
 LABEL "lostlakkris.service"="plex"
 COPY s6.lakkris/ /
+
+HEALTHCHECK --interval=5m --timeout=3s \
+  CMD /scripts/healthcheck.sh || exit 1

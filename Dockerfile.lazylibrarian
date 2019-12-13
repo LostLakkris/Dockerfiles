@@ -1,5 +1,6 @@
 FROM linuxserver/lazylibrarian:latest
 ENV SET_SERVICE="lazylibrarian" \
+    SET_PORT="5299" \
     LOSTLAKKRIS_CONTENT="books"
 LABEL "lostlakkris.service"="lazylibrarian" \
       "lostlakkris.content"="books"
@@ -10,3 +11,6 @@ RUN apt-get update && \
     apt-get -y autoremove && \
     rm -rf /var/lib/apt/lists/*
 COPY s6.lakkris/ /
+
+HEALTHCHECK --interval=5m --timeout=3s \
+  CMD /scripts/healthcheck.sh || exit 1
