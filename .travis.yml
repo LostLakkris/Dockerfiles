@@ -23,16 +23,16 @@ env:
   - DOCKER_ORG=lostlakkris
   matrix:
   - CONTAINER=shinobi
-  - CONTAINER=git-sync
   - CONTAINER=organizr
   - CONTAINER=sonarr
   - CONTAINER=radarr
   - CONTAINER=lidarr
+  - CONTAINER=lazylibrarian
   - CONTAINER=plex
   - CONTAINER=tautulli
-  - CONTAINER=lazylibrarian
   - CONTAINER=nzbget
   - CONTAINER=nzbhydra
+  - CONTAINER=git-sync
 #  - CONTAINER=serf
 
 before_install:

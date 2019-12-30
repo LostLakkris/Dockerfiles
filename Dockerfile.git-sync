@@ -1,6 +1,6 @@
 FROM lsiobase/alpine:3.11
 
-RUN apk add --no-cache bash git tini openssh
+RUN apk add --no-cache bash git tini openssh jq
 COPY s6.git-sync/ /
 
 VOLUME ["/data", "/update-hooks"]
