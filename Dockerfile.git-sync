@@ -1,4 +1,4 @@
-FROM lsiobase/alpine:3.10
+FROM lsiobase/alpine:3.11
 
 RUN apk add --no-cache bash git tini openssh
 COPY s6.git-sync/ /
