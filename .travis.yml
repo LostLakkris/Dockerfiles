@@ -23,6 +23,7 @@ env:
   - DOCKER_ORG=lostlakkris
   matrix:
   - CONTAINER=shinobi
+  - CONTAINER=git-sync
   - CONTAINER=organizr
   - CONTAINER=sonarr
   - CONTAINER=radarr
