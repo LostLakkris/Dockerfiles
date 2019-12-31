@@ -1,4 +1,4 @@
 #!/usr/bin/with-contenv bash
 cd /
 exec \
-        s6-setuidgid abc /opt/bin/ssh-sync.sh
+        s6-setuidgid abc /opt/bin/git-sync.sh

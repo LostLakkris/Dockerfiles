@@ -22,6 +22,7 @@ env:
   - DOCKER_CLI_EXPERIMENTAL=enabled
   - DOCKER_ORG=lostlakkris
   matrix:
+  - CONTAINER=git-sync
   - CONTAINER=shinobi
   - CONTAINER=organizr
   - CONTAINER=sonarr
@@ -32,7 +33,6 @@ env:
   - CONTAINER=tautulli
   - CONTAINER=nzbget
   - CONTAINER=nzbhydra
-  - CONTAINER=git-sync
 #  - CONTAINER=serf
 
 before_install:
