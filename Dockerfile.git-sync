@@ -9,5 +9,5 @@ ENV SET_SERVICE="git-sync"
 LABEL "lostlakkris.service"="git-sync"
 COPY s6.lakkris/ /
 
-ENTRYPOINT [ "tini", "-g", "--" ]
+#ENTRYPOINT [ "tini", "-g", "--" ]
 #CMD [ "/opt/bin/git-sync.sh" ] ## Replaced with s6 service file
