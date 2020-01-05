@@ -22,7 +22,6 @@ env:
   - DOCKER_CLI_EXPERIMENTAL=enabled
   - DOCKER_ORG=lostlakkris
   matrix:
-  - CONTAINER=autoheal
   - CONTAINER=shinobi
   - CONTAINER=nzbhydra
   - CONTAINER=lazylibrarian
@@ -31,6 +30,7 @@ env:
   - CONTAINER=radarr
   - CONTAINER=tautulli
   - CONTAINER=plex
+  - CONTAINER=autoheal
   - CONTAINER=nzbget
   - CONTAINER=git-sync
   - CONTAINER=organizr

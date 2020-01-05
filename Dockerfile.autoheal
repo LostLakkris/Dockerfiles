@@ -1,5 +1,5 @@
 # Pulled from https://github.com/willfarrell/docker-autoheal.git, to self-build multi-arch because willfarrell's appears broken at the moment
-FROM alpine:3.8
+FROM alpine:latest
 RUN apk add --no-cache curl jq
 
 COPY autoheal/docker-entrypoint /
