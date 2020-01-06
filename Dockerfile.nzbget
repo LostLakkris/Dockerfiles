@@ -3,5 +3,5 @@ ENV SET_SERVICE="nzbget"
 LABEL "lostlakkris.service"="nzbget"
 COPY s6.lakkris/ /
 
-HEALTHCHECK --interval=5m --timeout=3s \
+HEALTHCHECK --interval=2m --timeout=3s \
   CMD /scripts/healthcheck.sh || exit 1
