@@ -26,6 +26,7 @@ fi
 echo "[***] build - Create and use buildx context"
 docker buildx create --name $(echo ${DOCKER_REPO} | awk -F '/' '{print $NF}')
 docker buildx use $(echo ${DOCKER_REPO} | awk -F '/' '{print $NF}')
+docker buildx inspect --bootstrap
 docker buildx ls
 
 echo "[***] build - Inspect whats already been published to the hub"
