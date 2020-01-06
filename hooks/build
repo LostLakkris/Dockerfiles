@@ -7,6 +7,7 @@ FROM=$(awk '/^FROM/{print $NF}' "${DOCKERFILE_PATH}" | tail -n 1)
 echo "[***] build - Identifying origin platforms for reuse."
 PLATFORMS=""
 for PLAT in $(docker manifest inspect "${FROM}" | jq -c --raw-output '.manifests[].platform'); do
+	echo "PLAT: ${PLAT}"
 	PLAT_OS=$(echo "${PLAT}" | jq -c --raw-output '.os')
 	PLAT_ARCH=$(echo "${PLAT}" | jq -c --raw-output '.architecture')
 	PLAT_VARIANT=$(echo "${PLAT}" | jq -c --raw-output '.variant')
@@ -34,4 +35,5 @@ docker manifest inspect "${DOCKER_REPO}"
 docker buildx imagetools inspect "${DOCKER_REPO}"
 
 echo "[***] build - Starting build+push of '${DOCKERFILE_PATH}' to '${IMAGE_NAME#*/}'"
+echo "[***] build - Platform string: '${PLATFORMS}'"
 docker buildx build --platform "${PLATFORMS}" -t "${IMAGE_NAME#*/}" -f "${DOCKERFILE_PATH}" --push .

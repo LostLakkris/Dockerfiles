@@ -8,7 +8,7 @@ RUN \
       make pkgconfig \
       cairo cairo-dev pango pango-dev libjpeg-turbo libjpeg-turbo-dev \
       ffmpeg && \
-    apk add --no-cache --virtual .build-dependencies build-base gcc g++ && \
+    apk add --no-cache --virtual .build-dependencies build-base gcc g++ musl-dev && \
     git clone --single-branch --branch dev --depth 1 https://gitlab.com/Shinobi-Systems/Shinobi.git /opt/shinobi && \
     cd /opt/shinobi && (/usr/bin/npm install --unsafe-perm || ( cat /root/.npm/_logs/*-debug.log && false) ) && /usr/bin/npm audit fix --force && \
     apk del .build-dependencies
