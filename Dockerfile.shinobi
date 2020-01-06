@@ -1,5 +1,5 @@
-#FROM lsiobase/alpine:3.11
-FROM lsiobase/alpine:amd64-3.11
+#FROM lsiobase/alpine:amd64-3.11
+FROM lsiobase/alpine:3.11
 
 RUN \
     apk add --no-cache \

@@ -38,9 +38,9 @@ if [[ -n "$(which docker)" ]]; then
 	if [[ ${DOCKER_PKG} == *cli ]]; then
 		DOCKER_EXTRA=$(echo ${DOCKER_PKG} | cut -f2)
 	fi
-	apt-get install -y ${DOCKER_PKG} ${DOCKER_EXTRA} containerd.io
+	apt-get install -y ${DOCKER_PKG} ${DOCKER_EXTRA} containerd.io qemu-user
 else
-	apt-get install -y docker-ce docker-ce-cli containerd.io
+	apt-get install -y docker-ce docker-ce-cli containerd.io qemu-user
 fi
 
 echo "[***] Adding qemu-user-static container, and binfmt"
