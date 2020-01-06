@@ -11,7 +11,7 @@ RUN \
       ffmpeg && \
     apk add --no-cache --virtual .build-dependencies build-base g++ make && \
     git clone --single-branch --branch dev --depth 1 https://gitlab.com/Shinobi-Systems/Shinobi.git /opt/shinobi && \
-    cd /opt/shinobi && (/usr/bin/npm install --unsafe-perm || ( cat /root/.npm/_logs/*-debug.log && false) ) && /usr/bin/npm audit fix --force && \
+    cd /opt/shinobi && /usr/bin/npm install --unsafe-perm && /usr/bin/npm audit fix --force && \
     apk del .build-dependencies
 
 VOLUME ["/opt/shinobi/videos", "/config", "/var/lib/mysql"]
