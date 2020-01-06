@@ -24,8 +24,14 @@ PWD=$(pwd)
 cd /opt/shinobi && git pull -q
 cd $PWD
 
+chown abc:abc \
+	/opt/shinobi
+
 chown -R abc:abc \
 	/opt/shinobi/*
+
+chown abc:abc \
+	/config/shinobi
 
 chown -R abc:abc \
 	/config/shinobi/*
