@@ -30,6 +30,11 @@ fi
 
 cd /data || exit 1
 
+if [ -d /data/.git ] ; then
+  echo "$(date +"%Y-%m-%d %H:%M:%S") Detected .git directory, setting SKIP_CLONE to true."
+  export SKIP_CLONE="true"
+fi
+
 if [ "${SKIP_CLONE}" = "true" ]; then
   echo "$(date +"%Y-%m-%d %H:%M:%S") Skipping initial clone because SKIP_CLONE is set to true"
 else
