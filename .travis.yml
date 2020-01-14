@@ -22,19 +22,20 @@ env:
   - DOCKER_CLI_EXPERIMENTAL=enabled
   - DOCKER_ORG=lostlakkris
   matrix:
-  - CONTAINER=shinobi
-  - CONTAINER=nzbhydra
+  - CONTAINER=autoheal
+  - CONTAINER=git-sync
   - CONTAINER=lazylibrarian
   - CONTAINER=lidarr
-  - CONTAINER=sonarr
-  - CONTAINER=radarr
-  - CONTAINER=tautulli
-  - CONTAINER=plex
-  - CONTAINER=autoheal
   - CONTAINER=nzbget
-  - CONTAINER=git-sync
+  - CONTAINER=nzbhydra
   - CONTAINER=organizr
+  - CONTAINER=plex
+  - CONTAINER=radarr
+  - CONTAINER=samba
 #  - CONTAINER=serf
+  - CONTAINER=shinobi
+  - CONTAINER=sonarr
+  - CONTAINER=tautulli
 
 before_install:
 - echo '{"experimental":true}' | sudo tee /etc/docker/daemon.json
