@@ -9,5 +9,5 @@ RUN apt-get update -y && \
     rm -rf /var/lib/apt/lists/*
 COPY s6.lakkris/ /
 
-HEALTHCHECK --interval=2m --timeout=3s \
+HEALTHCHECK --interval=1m --timeout=3s --start-period=5m \
   CMD /scripts/healthcheck.sh || exit 1
