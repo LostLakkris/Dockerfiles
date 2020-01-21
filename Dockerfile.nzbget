@@ -1,5 +1,6 @@
 FROM linuxserver/nzbget:latest
-ENV SET_SERVICE="nzbget"
+ENV SET_SERVICE="nzbget" \
+    SET_PORT="6789"
 LABEL "lostlakkris.service"="nzbget"
 COPY s6.lakkris/ /
 
