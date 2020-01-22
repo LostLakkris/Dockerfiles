@@ -33,7 +33,7 @@ env:
   - CONTAINER=radarr
   - CONTAINER=samba
 #  - CONTAINER=serf
-  - CONTAINER=shinobi
+  - CONTAINER=shinobi PLATFORMS=linux/amd64
   - CONTAINER=sonarr
   - CONTAINER=tautulli
 
