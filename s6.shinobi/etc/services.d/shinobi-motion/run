@@ -1,7 +1,7 @@
-#!/usr/bin/with-contenv bash
-cd /opt/shinobi
+#!/bin/execlineb -P
 
-s6-svwait -U /var/run/s6/services/shinobi/
+if { s6-svwait -U /var/run/s6/services/shinobi/ }
 
-exec \
-	s6-setuidgid abc /usr/bin/node /opt/shinobi/plugins/motion/shinobi-motion.js
+s6-setuidgid abc
+
+/usr/bin/node /opt/shinobi/plugins/motion/shinobi-motion.js

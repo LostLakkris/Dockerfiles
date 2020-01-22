@@ -1,4 +1,4 @@
-#!/usr/bin/with-contenv bash
+#!/bin/execlineb -P
 
 # Redirect stderr to stdout.
 fdmove -c 2 1
@@ -6,5 +6,4 @@ fdmove -c 2 1
 # Notify service manager when mysql is up
 s6-notifyoncheck -w 1000 -c "redirfd -w 1 /dev/null fdmove -c 2 1 nc -w 1 -z -v 127.0.0.1 3306"
 
-exec \
-	s6-setuidgid abc /usr/bin/mysqld_safe --skip-syslog --datadir="/config/mysql"
+/usr/bin/mysqld_safe --skip-syslog --datadir="/config/mysql"

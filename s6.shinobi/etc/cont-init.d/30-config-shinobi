@@ -37,7 +37,7 @@ chown -R abc:abc \
 	/config/shinobi/*
 
 if [[ ! -d /dev/shm/streams ]]; then
-	mkdir /dev/shm/streams
+	mkdir -P /dev/shm/streams
 fi
 
 chown -R abc:abc \
