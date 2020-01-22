@@ -2,7 +2,7 @@ FROM lsiobase/alpine:3.11
 
 RUN \
     apk add --no-cache \
-      git wget zip tar xz \
+      git wget zip tar xz curl \
       nodejs npm python \
       mariadb mariadb-client \
       pkgconfig \

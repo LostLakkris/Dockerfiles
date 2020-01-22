@@ -5,8 +5,7 @@ ENV SET_SERVICE="lazylibrarian" \
 LABEL "lostlakkris.service"="lazylibrarian" \
       "lostlakkris.content"="books"
 RUN apt-get update && \
-    apt-get install -y python3-pip && \
-    pip3 install --no-cache-dir -U crudini && \
+    apt-get install --no-install-recommends -y crudini && \
     apt-get -y autoremove && \
     rm -rf /var/lib/apt/lists/*
 COPY s6.lakkris/ /
