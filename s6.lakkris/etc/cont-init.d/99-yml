@@ -35,6 +35,9 @@
 			fi
 			yq -y --arg opt "${OPTION}" --arg val "${!ENVIRONMENT}" '.main[$opt]=$val' /tmp/svc_${SET_SERVICE}.yml > /tmp/svc_${SET_SERVICE}.yml.2
 			mv /tmp/svc_${SET_SERVICE}.yml.2 /tmp/svc_${SET_SERVICE}.yml
+			if [[ -e "${YML_FILE}" && -e "/tmp/svc_${SET_SERVICE}.yml" ]]; then
+				chmod --reference="${YML_FILE}" "/tmp/svc_${SET_SERVICE}.yml"
+			fi
 		fi
 	done
 
