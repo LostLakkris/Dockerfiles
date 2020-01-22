@@ -35,9 +35,6 @@
 			fi
 			yq -y --arg opt "${OPTION}" --arg val "${!ENVIRONMENT}" '.main[$opt]=$val' /tmp/svc_${SET_SERVICE}.yml > /tmp/svc_${SET_SERVICE}.yml.2
 			mv /tmp/svc_${SET_SERVICE}.yml.2 /tmp/svc_${SET_SERVICE}.yml
-			if [[ -e "${YML_FILE}" && -e "/tmp/svc_${SET_SERVICE}.yml" ]]; then
-				chmod --reference="${YML_FILE}" "/tmp/svc_${SET_SERVICE}.yml"
-			fi
 		fi
 	done
 
@@ -45,6 +42,9 @@
 	if [[ "${MD5_START}" != "${MD5_END}" ]]; then
 		s6-svc -wD -d "/var/run/s6/services/${SET_SERVICE}"
 		s6-svwait -d "/var/run/s6/services/${SET_SERVICE}"
+		if [[ -e "${YML_FILE}" && -e "/tmp/svc_${SET_SERVICE}.yml" ]]; then
+			chmod --reference="${YML_FILE}" "/tmp/svc_${SET_SERVICE}.yml"
+		fi
 		mv /tmp/svc_${SET_SERVICE}.yml "${YML_FILE}"
 		s6-svc -wU -u "/var/run/s6/services/${SET_SERVICE}"
 		s6-svwait -u "/var/run/s6/services/${SET_SERVICE}"
