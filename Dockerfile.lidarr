@@ -6,5 +6,5 @@ LABEL "lostlakkris.service"="lidarr" \
       "lostlakkris.content"="music"
 COPY s6.lakkris/ /
 
-HEALTHCHECK --interval=2m --timeout=3s \
+HEALTHCHECK --interval=30s --timeout=3s \
   CMD /scripts/healthcheck.sh || exit 1
