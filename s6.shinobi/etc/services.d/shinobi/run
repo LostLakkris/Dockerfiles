@@ -1,4 +1,11 @@
 #!/usr/bin/with-contenv bash
+
+# Redirect stderr to stdout.
+fdmove -c 2 1
+
+# Notify service manager when shinobi is up
+s6-notifyoncheck -w 1000 -c "redirfd -w 1 /dev/null fdmove -c 2 1 nc -w 1 -z -v 127.0.0.1 8080"
+
 if [[ ! -d /dev/shm/streams ]]; then
         mkdir /dev/shm/streams
 fi
@@ -7,5 +14,8 @@ chown -R abc:abc \
         /dev/shm/streams
 
 cd /opt/shinobi
+
+s6-svwait -U /var/run/s6/services/mysql/
+
 exec \
 	s6-setuidgid abc /usr/bin/node /opt/shinobi/camera.js
