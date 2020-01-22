@@ -4,11 +4,11 @@ if [[ -z "${SET_PORT}" ]]; then
 fi
 if [[ -n "${SET_URLBASE}" ]]; then
 	if [[ "${SET_URLBASE}" =~ ^/.* ]]; then
-		/usr/bin/curl -f http://localhost:${SET_PORT}${SET_URLBASE}
+		/usr/bin/curl -s -f http://localhost:${SET_PORT}${SET_URLBASE}
 	else
-		/usr/bin/curl -f http://localhost:${SET_PORT}/${SET_URLBASE}
+		/usr/bin/curl -s -f http://localhost:${SET_PORT}/${SET_URLBASE}
 	fi
 else
-	/usr/bin/curl -f http://localhost:${SET_PORT}/
+	/usr/bin/curl -s -f http://localhost:${SET_PORT}/
 fi
 exit $?
