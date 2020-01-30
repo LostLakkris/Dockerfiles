@@ -2,6 +2,8 @@
 
 if { s6-svwait -U /var/run/s6/services/shinobi/ }
 
+cd /opt/shinobi
+
 s6-setuidgid abc
 
 /usr/bin/node /opt/shinobi/plugins/motion/shinobi-motion.js
