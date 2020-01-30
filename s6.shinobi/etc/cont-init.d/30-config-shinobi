@@ -21,24 +21,15 @@ done
 #fi
 
 PWD=$(pwd)
-cd /opt/shinobi && git pull -q
+cd /opt/shinobi && git checkout libs/uploaders && git pull -q && sed -i "s/'public-read'/'private'/g" libs/uploaders/*.js
 cd $PWD
-
-chown abc:abc \
-	/opt/shinobi
-
-chown -R abc:abc \
-	/opt/shinobi/*
-
-chown abc:abc \
-	/config/shinobi
-
-chown -R abc:abc \
-	/config/shinobi/*
 
 if [[ ! -d /dev/shm/streams ]]; then
 	mkdir -p /dev/shm/streams
 fi
 
 chown -R abc:abc \
-	/dev/shm/streams
+	/opt/shinobi
+
+chown -R abc:abc \
+	/config/shinobi /opt/shinobi /dev/shm/streams
