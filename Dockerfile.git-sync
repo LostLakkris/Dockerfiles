@@ -1,6 +1,6 @@
 FROM lsiobase/alpine:3.11
 
-RUN apk add --no-cache bash git tini openssh jq curl
+RUN apk add --no-cache --repository=http://dl-cdn.alpinelinux.org/alpine/edge/main bash git tini openssh jq curl
 COPY s6.git-sync/ /
 
 VOLUME ["/data", "/update-hooks"]
