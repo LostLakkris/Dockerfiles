@@ -26,6 +26,7 @@ env:
   - CONTAINER=git-sync
   - CONTAINER=lazylibrarian
   - CONTAINER=lidarr
+  - CONTAINER=mariadb
   - CONTAINER=nzbget
   - CONTAINER=nzbhydra
   - CONTAINER=organizr

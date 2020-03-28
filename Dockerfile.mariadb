@@ -1,0 +1,13 @@
+FROM lsiobase/alpine:3.11
+
+RUN \
+    apk add --no-cache \
+      mariadb mariadb-client
+
+VOLUME ["/config","/var/lib/mysql"]
+COPY s6.mariadb/ /
+
+EXPOSE 3306
+
+HEALTHCHECK --interval=30s --timeout=3s \
+  CMD /scripts/mariadb-healthcheck.sh || exit 1
