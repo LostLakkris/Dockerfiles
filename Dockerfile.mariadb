@@ -4,7 +4,7 @@ RUN \
     apk add --no-cache \
       mariadb mariadb-client
 
-VOLUME ["/config","/var/lib/mysql"]
+VOLUME ["/config"]
 COPY s6.mariadb/ /
 
 EXPOSE 3306
