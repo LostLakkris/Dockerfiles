@@ -6,6 +6,7 @@ for x in '/config/php' '/config/php/log'; do
 	fi
 done
 
+
 sed -i 's@listen = 127.0.0.1:9000@listen = /var/run/php-fpm.sock@g' /etc/php7/php-fpm.d/www.conf
 sed -i 's@/var/log/php7/@/config/php/log/@g' /etc/php7/php-fpm.d/www.conf
 sed -i 's@user = nobody@user = abc@g' /etc/php7/php-fpm.d/www.conf
@@ -13,4 +14,7 @@ sed -i 's@group = nobody@group = abc@g' /etc/php7/php-fpm.d/www.conf
 sed -i 's@^;listen.owner = nobody@listen.owner = abc@g' /etc/php7/php-fpm.d/www.conf
 sed -i 's@^;listen.group = nobody@listen.group = abc@g' /etc/php7/php-fpm.d/www.conf
 sed -i 's@^;listen.mode@listen.mode@g' /etc/php7/php-fpm.d/www.conf
+
+sed -i 's@^;error_log =.*@error_log = /config/php/log/error.log@g' /etc/php7/php-fpm.conf
+
 sed -i 's@max_execution_time = .*@max_execution_time = 90@g' /etc/php7/php.ini
