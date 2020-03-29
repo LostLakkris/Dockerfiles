@@ -37,6 +37,7 @@ env:
   - CONTAINER=shinobi PLATFORMS=linux/amd64
   - CONTAINER=sonarr
   - CONTAINER=tautulli
+  - CONTAINER=webtrees
 
 before_install:
 - echo '{"experimental":true}' | sudo tee /etc/docker/daemon.json

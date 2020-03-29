@@ -1,0 +1,14 @@
+#!/bin/execlineb -P
+
+# Redirect stderr to stdout.
+fdmove -c 2 1
+
+# Notify service manager when nginx is up
+s6-notifyoncheck -w 1000 -c "redirfd -w 1 /dev/null fdmove -c 2 1 nc -w 1 -z -v 127.0.0.1 80"
+
+if { s6-svwait -U /var/run/s6/services/php-fpm/ }
+if { s6-svwait -U /var/run/s6/services/mysql/ }
+
+#s6-setuidgid abc
+
+/usr/sbin/nginx -g "daemon off;"
