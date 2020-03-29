@@ -48,6 +48,24 @@ if [[ ! -d /config/mysql ]]; then
 	DROP DATABASE IF EXISTS test ;
 	EONEWSQL
 
+	# Create database if defined
+	if [[ -n "${MYSQL_DATABASE}" ]]; then
+		cat >> "${sql_preseed}" <<-EOSQL
+			CREATE DATABASE IF NOT EXISTS \`${MYSQL_DATABASE}\`;
+		EOSQL
+	fi
+	# Create sql user if defined
+	if [[ -n "${MYSQL_USER}" && -n "${MYSQL_PASSWORD}" ]]; then
+		cat >> "${sql_preseed}" <<-EOSQL
+			CREATE USER '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}' ;
+		EOSQL
+		if [[ -n "${MYSQL_DATABASE}" ]]; then
+			cat >> "${sql_preseed}" <<-EOSQL
+				GRANT ALL ON \`${MYSQL_DATABASE}\`.* TO '${MYSQL_USER}'@'%' ;
+			EOSQL
+		fi
+	fi
+
 	if [[ -n "${MYSQL_PRESEED}" && -f "${MYSQL_PRESEED}" ]]; then
 		# Add application's preseed
 		echo "" >> "${sql_preseed}"
