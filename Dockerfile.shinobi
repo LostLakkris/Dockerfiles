@@ -13,14 +13,15 @@ RUN \
     cd /opt/shinobi && /usr/bin/npm install --unsafe-perm && /usr/bin/npm audit fix --force && \
     apk del .build-dependencies
 
-VOLUME ["/opt/shinobi/videos", "/config", "/var/lib/mysql"]
+VOLUME ["/opt/shinobi/videos", "/config"]
 
 EXPOSE 8080
-
+COPY s6.mariadb/ /
 COPY s6.shinobi/ /
 
 ENV SET_SERVICE="shinobi" \
-    SET_PORT="8080"
+    SET_PORT="8080" \
+    MYSQL_PRESEED="/tmp/shinobi.sql"
 LABEL "lostlakkris.service"="shinobi"
 COPY s6.lakkris/ /
 

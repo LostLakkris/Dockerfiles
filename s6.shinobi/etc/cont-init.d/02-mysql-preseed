@@ -1,0 +1,6 @@
+#!/usr/bin/with-contenv bash
+MYSQL_PRESEED=${MYSQL_PRESEED:-/tmp/shinobi.sql}
+
+cat /opt/shinobi/sql/user.sql > ${MYSQL_PRESEED}
+echo "" >> ${MYSQL_PRESEED}
+cat /opt/shinobi/sql/framework.sql >> ${MYSQL_PRESEED}
