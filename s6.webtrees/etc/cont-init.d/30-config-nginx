@@ -23,6 +23,10 @@ server {
   location ${SET_URLBASE:-}/(.git|data|app|modules|resources|vendor) {
     deny all;
   }
+  location = ${SET_URLBASE:-}/robots.txt {
+    add_header Content-Type text/plain;
+    return 200 "User-agent: *\nDisallow: /";
+  }
   location ${SET_URLBASE:-}/ {
     rewrite ^ ${SET_URLBASE:-}/index.php last;
   }
