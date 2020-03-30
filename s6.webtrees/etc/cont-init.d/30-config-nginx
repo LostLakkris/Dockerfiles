@@ -9,7 +9,6 @@ done
 
 sed -i 's@/var/log/nginx/@/config/nginx/log/@g' /etc/nginx/nginx.conf
 sed -i 's@user nginx;@user abc;@g' /etc/nginx/nginx.conf
-sed -i 's@fastcgi_param  REMOTE_ADDR        $remote_addr;@fastcgi_param  REMOTE_ADDR        $http_x_forwarded_for;@g' /etc/nginx/fastcgi_params
 
 cat > /etc/nginx/conf.d/default.conf <<-EOF
 server {
