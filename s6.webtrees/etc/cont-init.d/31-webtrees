@@ -11,7 +11,7 @@ done
 chown -R abc:abc \
 	/app
 
-if [[ -d /app/data && -d /config/webtrees ]]; then
+if [[ ! -L /app/data && -d /app/data && -d /config/webtrees ]]; then
 	find /app/data -type f -exec mv {} /config/webtrees/ \;
 	rmdir /app/data
 fi
