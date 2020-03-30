@@ -1,10 +1,10 @@
 #!/usr/bin/with-contenv bash
 
-for x in '/run/nginx' '/config/nginx' '/config/nginx/log'; do
+for x in '/run/nginx' '/config/nginx' '/config/nginx/log' '/var/lib/nginx'; do
 	if [[ ! -d ${x} ]]; then
 		mkdir ${x}
-		chown nginx:nginx ${x}
 	fi
+	chown abc:abc ${x}
 done
 
 sed -i 's@/var/log/nginx/@/config/nginx/log/@g' /etc/nginx/nginx.conf

@@ -18,3 +18,4 @@ sed -i 's@^;listen.mode@listen.mode@g' /etc/php7/php-fpm.d/www.conf
 sed -i 's@^;error_log =.*@error_log = /config/php/log/error.log@g' /etc/php7/php-fpm.conf
 
 sed -i 's@max_execution_time = .*@max_execution_time = 90@g' /etc/php7/php.ini
+sed -i 's@upload_max_filesize =.*@upload_max_filesize = 20M@g' /etc/php7/php.ini
