@@ -19,3 +19,4 @@ sed -i 's@^;error_log =.*@error_log = /config/php/log/error.log@g' /etc/php7/php
 
 sed -i 's@max_execution_time = .*@max_execution_time = 90@g' /etc/php7/php.ini
 sed -i 's@upload_max_filesize =.*@upload_max_filesize = 20M@g' /etc/php7/php.ini
+sed -i 's@post_max_size =.*@post_max_size = 20M@g' /etc/php7/php.ini
