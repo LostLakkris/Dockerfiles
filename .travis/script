@@ -38,6 +38,7 @@ case ${TAG_STYLE} in
 		echo "[***] ${STAGE} - Container is only configured to build latest, not tagged versions"
 		DOCKER_TAGS+=( "-t" "${DOCKER_ORG}/${CONTAINER}:latest" )
 		echo "[***] ${STAGE} - Queing tag ${DOCKER_ORG}/${CONTAINER}:latest"
+		DOCKER_ARGS+=( "--build-arg" "RELEASE=latest" )
 		;;
 	"version")
 		echo "[***] ${STAGE} - Using any version data to calculate appropriate tags"
