@@ -1,4 +1,5 @@
-FROM linuxserver/nzbget:latest
+ARG RELEASE
+FROM linuxserver/nzbget:${RELEASE}
 COPY lakkris.s6/ /
 ENV SET_SERVICE="nzbget" \
     SET_PORT="6789"

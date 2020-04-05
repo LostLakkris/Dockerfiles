@@ -1,4 +1,5 @@
-FROM linuxserver/radarr:latest
+ARG RELEASE
+FROM linuxserver/radarr:${RELEASE}
 COPY lakkris.s6/ /
 ENV SET_SERVICE="radarr" \
     SET_PORT="7878" \

@@ -1,4 +1,5 @@
-FROM linuxserver/sonarr:latest
+ARG RELEASE
+FROM linuxserver/sonarr:${RELEASE}
 COPY lakkris.s6/ /
 ENV SET_SERVICE="sonarr" \
     SET_PORT="8989" \

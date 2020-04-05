@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
-DOCKER_REPO=esphome/esphome
+DOCKER_REPO=linuxserver/radarr
 
-bash .travis/listDockerTags ${DOCKER_REPO} | grep -v '\([a-Z]\)' > /tmp/${CONTAINER}.VERSIONS
+bash .travis/listDockerTags ${DOCKER_REPO} | awk '/^v/ && /-ls/ && !/-[a-km-rt-z]/' > /tmp/${CONTAINER}.VERSIONS
 
 # Set LATEST
 sort -V /tmp/${CONTAINER}.VERSIONS | tail -n 1 > ${CONTAINER}.LATEST

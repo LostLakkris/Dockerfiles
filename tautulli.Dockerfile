@@ -1,4 +1,5 @@
-FROM linuxserver/tautulli:latest
+ARG RELEASE
+FROM linuxserver/tautulli:${RELEASE}
 COPY lakkris.s6/ /
 RUN pip install --no-cache-dir -U crudini
 ENV SET_SERVICE="tautulli"

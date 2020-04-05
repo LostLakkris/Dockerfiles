@@ -1,0 +1,11 @@
+#!/bin/bash
+set -e
+REMOTE_REPO="https://gitlab.com/Shinobi-Systems/Shinobi.git"
+REMOTE_BRANCH="dev"
+
+# Get CURRENT
+CURRENT=$(git ls-remote ${REMOTE_REPO} ${REMOTE_BRANCH} | awk '{print $1}')
+if [[ -n "${CURRENT}" && "${CURRENT}" != "null" ]]; then
+	echo "${CURRENT}" > ${CONTAINER}.LATEST
+	echo "${CURRENT}" > ${CONTAINER}.VERSIONS
+fi

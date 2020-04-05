@@ -1,4 +1,5 @@
-FROM linuxserver/hydra2:latest
+ARG RELEASE
+FROM linuxserver/hydra2:${RELEASE}
 COPY lakkris.s6/ /
 RUN apt-get update -y && \
     apt-get install -y jq python-pip && \

@@ -1,4 +1,5 @@
-FROM linuxserver/lidarr:latest
+ARG RELEASE
+FROM linuxserver/lidarr:${RELEASE}
 COPY lakkris.s6/ /
 ENV SET_SERVICE="lidarr" \
     SET_PORT="8686" \
