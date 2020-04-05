@@ -51,3 +51,5 @@ jobs:
       env: CONTAINER=mariadb
     - stage: build
       env: CONTAINER=nzbget
+    - stage: build
+      env: CONTAINER=nzbhydra
