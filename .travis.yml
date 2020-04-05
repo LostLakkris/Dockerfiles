@@ -39,3 +39,5 @@ jobs:
       script: bash .travis/cron script
     - stage: build
       env: CONTAINER=autoheal
+    - stage: build
+      env: CONTAINER=esphome
