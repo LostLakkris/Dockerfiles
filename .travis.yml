@@ -1,55 +1,40 @@
+os: linux
 dist: bionic
-
-language: bash
-
+language: shell
 services:
-- docker
-
+  - docker
 addons:
   apt:
     update: true
     sources:
-    - sourceline: "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
-      key_url: https://download.docker.com/linux/ubuntu/gpg
+      - sourceline: deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic
+          stable
+        key_url: https://download.docker.com/linux/ubuntu/gpg
     packages:
-    - docker-ce
-    - docker-ce-cli
-    - containerd.io
-    - jq
-
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - qemu-user
+      - jq
+      - git
+before_install:
+  - bash .travis/before_install
+before_script:
+  - bash .travis/before_script
+script:
+  - bash .travis/script
 env:
   global:
-  - DOCKER_CLI_EXPERIMENTAL=enabled
-  - DOCKER_ORG=lostlakkris
-  matrix:
-  - CONTAINER=autoheal
-  - CONTAINER=git-sync
-  - CONTAINER=lazylibrarian
-  - CONTAINER=lidarr
-  - CONTAINER=mariadb
-  - CONTAINER=nzbget
-  - CONTAINER=nzbhydra
-  - CONTAINER=organizr
-  - CONTAINER=plex
-  - CONTAINER=radarr
-  - CONTAINER=samba
-#  - CONTAINER=serf
-  - CONTAINER=shinobi PLATFORMS=linux/amd64
-  - CONTAINER=sonarr
-  - CONTAINER=tautulli
-  - CONTAINER=webtrees
-
-before_install:
-- echo '{"experimental":true}' | sudo tee /etc/docker/daemon.json
-
-before_script:
-- sudo bash hooks/pre_build
-
-script:
-- docker login -u "${DOCKER_USER}" -p "${DOCKER_PASSWORD}" &> /dev/null
-- export DOCKERFILE_PATH=Dockerfile.${CONTAINER}
-- export DOCKER_REPO=index.docker.io/${DOCKER_ORG}/${CONTAINER}
-- export DOCKER_TAG=latest
-- export IMAGE_NAME=${DOCKER_REPO}:${DOCKER_TAG}
-- bash hooks/build
-- bash hooks/push
+    - DOCKER_CLI_EXPERIMENTAL=enabled
+    - DOCKER_ORG=lostlakkris
+stages:
+  - name: build
+    if: type != cron
+  - name: cron
+    if: type = cron
+jobs:
+  include:
+    - stage: cron
+      before_install: bash .travis/cron before_install
+      before_script: bash .travis/cron before_script
+      script: bash .travis/cron script

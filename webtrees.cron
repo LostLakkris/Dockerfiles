@@ -1,0 +1,22 @@
+#!/bin/bash
+set -e
+REMOTE_REPO=https://github.com/fisharebest/webtrees.git
+
+# Set LATEST
+git ls-remote --tags ${REMOTE_REPO} | awk -F '/' '!/{}/{print $NF}' | grep -v '\(-[a-Z]\)' | sort -V | tail -n1 > ${CONTAINER}.LATEST
+
+# Add 1 missing to VERSIONS
+ADDED=0
+if [[ ! -e ${CONTAINER}.VERSIONS ]]; then
+        touch ${CONTAINER}.VERSIONS
+fi
+for x in $(git ls-remote --tags ${REMOTE_REPO} | awk -F '/' '!/{}/{print $NF}' | grep -v '\(-[a-Z]\)' | sort -V); do
+        if ! grep -q "^${x}$" ${CONTAINER}.VERSIONS; then
+                if [[ ${ADDED} -eq 0 ]]; then
+                        echo ${x} >> ${CONTAINER}.VERSIONS
+                        ADDED=1
+                else
+                        break
+                fi
+        fi
+done

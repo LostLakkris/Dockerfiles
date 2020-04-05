@@ -1,0 +1,105 @@
+#!/bin/bash
+STAGE="script"
+docker login -u "${DOCKER_USER}" -p "${DOCKER_PASSWORD}" &> /dev/null
+
+export DOCKER_REPO=index.docker.io/${DOCKER_ORG}/${CONTAINER}
+export DOCKERFILE_PATH="${CONTAINER}.Dockerfile"
+
+source .travis/common
+
+if [[ ! -e "${DOCKERFILE_PATH}" ]]; then
+	echo "[***] ${SCRIPT} - ${CONTAINER} has no Dockerfile. Either add one, or put in a .script override to do something different."
+	exit 1
+fi
+
+DOCKER_ARGS=()
+DOCKER_ARGS+=( "buildx" "build" "--push" )
+
+## Grab upstream image's arches, or permit committed override
+echo "[***] ${STAGE} - Using 'docker buildx' to construct the multi-arch images."
+if [[ -e "${CONTAINER}.platforms" ]]; then
+        PLATFORMS=$(cat "${CONTAINER}.platforms")
+elif [[ -z "${CONTAINER}.platforms" ]]; then
+        FROM=$(awk '/^FROM/{print $NF}' "${DOCKERFILE_PATH}" | tail -n 1)
+        PLATFORMS=""
+        for PLAT in $(docker manifest inspect "${FROM}" | jq -c --raw-output '.manifests[].platform'); do
+                PLAT_OS=$(echo "${PLAT}" | jq -c --raw-output '.os')
+                PLAT_ARCH=$(echo "${PLAT}" | jq -c --raw-output '.architecture')
+                PLAT_VARIANT=$(echo "${PLAT}" | jq -c --raw-output '.variant')
+                echo "[***] ${STAGE} - Detected remote: ${PLAT_OS} - ${PLAT_ARCH}"
+                if [[ -n "${PLATFORMS}" ]]; then
+                        PLATFORMS+=","
+                fi
+                PLATFORMS+="${PLAT_OS}/${PLAT_ARCH}"
+                if [[ -n "${PLAT_VARIANT}" && "${PLAT_VARIANT}" != "null" ]]; then
+                        PLATFORMS+="/${PLAT_VARIANT}"
+                fi
+        done
+fi
+
+if [[ -z "${PLATFORMS}" ]]; then
+        PLATFORMS="linux/amd64"
+fi
+echo "[***] ${STAGE} - Platform string used: '${PLATFORMS}'"
+DOCKER_ARGS+=( "--platform" "${PLATFORMS}" )
+
+## Prep the buildx environment
+echo "[***] ${STAGE} - Create and use buildx context"
+docker buildx create --name "${CONTAINER}"
+docker buildx use "${CONTAINER}"
+docker buildx inspect --bootstrap
+docker buildx ls
+
+echo "[***] ${STAGE} - Inspect whats already been published to the hub"
+docker manifest inspect "${DOCKER_ORG}/${CONTAINER}"
+docker buildx imagetools inspect "${DOCKER_ORG}/${CONTAINER}"
+
+## Calculate any necessary tags
+TAG_STYLE="latest"
+if [[ -e "${CONTAINER}.LATEST" && -e "${CONTAINER}.VERSIONS" ]]; then
+	TAG_STYLE="version"
+fi
+
+DOCKER_TAGS=()
+case ${TAG_STYLE} in
+	"latest")
+		echo "[***] ${STAGE} - Container is only configured to build latest, not tagged versions"
+		DOCKER_TAGS+=( "-t" "${DOCKER_ORG}/${CONTAINER}:latest" )
+		echo "[***] ${STAGE} - Queing tag ${DOCKER_ORG}/${CONTAINER}:latest"
+		;;
+	"version")
+		echo "[***] ${STAGE} - Using any version data to calculate appropriate tags"
+		LATEST_VERSION=""
+		THIS_VERSION=""
+		if [[ -e "${CONTAINER}.LATEST" && -e "${CONTAINER}.VERSIONS" ]]; then
+		        LATEST_VERSION=$(cat "${CONTAINER}.LATEST")
+		        THIS_VERSION=$(tail -n1 "${CONTAINER}.VERSIONS")
+		        SUBTAG=${THIS_VERSION}
+		        while [[ -n "${SUBTAG//[^.]}" ]]; do
+		                LATEST_MATCH=$(awk "/${SUBTAG%.**}/ {a=\$0} END{print a}" "${CONTAINER}.VERSIONS")
+		                if [[ "${LATEST_MATCH}" == "${THIS_VERSION}" ]]; then
+		                        DOCKER_TAGS+=( "-t" "${DOCKER_ORG}/${CONTAINER}:${SUBTAG%.**}" )
+		                        echo "[***] ${STAGE} - Queing tag ${DOCKER_ORG}/${CONTAINER}:${SUBTAG%.**}"
+		                fi
+		                SUBTAG=${SUBTAG%.**}
+		        done
+		fi
+
+		if [[ -n "${LATEST_VERSION}" && -n "${THIS_VERSION}" && "${LATEST_VERSION}" == "${THIS_VERSION}" ]]; then
+		        DOCKER_TAGS+=( "-t" "${DOCKER_ORG}/${CONTAINER}:latest" )
+		        echo "[***] ${STAGE} - Queing tag ${DOCKER_ORG}/${CONTAINER}:latest"
+		else
+		        DOCKER_TAGS+=( "-t" "${DOCKER_ORG}/${CONTAINER}:debug" )
+		        echo "[***] ${STAGE} - Queing tag ${DOCKER_ORG}/${CONTAINER}:debug"
+		fi
+		if [[ -n "${THIS_VERSION}" ]]; then
+			DOCKER_ARGS+=( "--build-arg" "RELEASE=${THIS_VERSION}" )
+		fi
+		;;
+esac
+DOCKER_ARGS+=( ${DOCKER_TAGS[@]} )
+
+echo "[***] ${STAGE} - Starting build+push of '${DOCKER_ORG}/${CONTAINER}'"
+DOCKER_ARGS+=( "-f" "${DOCKERFILE_PATH}" "." )
+#docker buildx build --build-arg "RELEASE=${THIS_VERSION}" --push --platform "${PLATFORMS}" ${DOCKER_TAGS[@]} -f "${DOCKERFILE_PATH}" .
+docker ${DOCKER_ARGS[@]}

@@ -1,0 +1,78 @@
+#!/bin/bash
+set -e
+STAGE="cron"
+REMOTE="origin"
+BRANCH="master"
+if [[ "$1" != "before_install" ]]; then
+        echo "[***] ${STAGE} - These scripts are run in the before_install phase only, skipping."
+        exit 0
+fi
+
+if [[ -z "$(which yq)" ]]; then
+	sudo pip install yq
+fi
+
+if [[ "${CI}" == "true" && "${TRAVIS}" == "true" ]]; then
+	echo "[***] ${STAGE} - Configuring git for commit"
+        git checkout master
+        git config user.email "travis@travis-ci.org"
+        git config user.name "Travis CI"
+        git config push.default current
+        if [[ -n "${GITHUB_OAUTH_TOKEN}" ]]; then
+                git remote add https-origin "https://${GITHUB_OAUTH_TOKEN}:x-oauth-basic@github.com/${TRAVIS_REPO_SLUG}" &> /dev/null
+        else
+                git remote add https-origin "https://github.com/${TRAVIS_REPO_SLUG}" &> /dev/null
+        fi
+        REMOTE="https-origin"
+fi
+
+# Check for any new containers to be added to .travis.yml
+TRAVIS_UPDATE="false"
+echo "[***] ${STAGE} - Checking for any missing containers."
+for container in $(ls -1 | grep '.\(cron\|script\|Dockerfile\)' | awk -F'.' 'BEGIN{OFS="."};NF{NF-=1};1' | sort -u); do
+	EXISTS=$(yq -c --arg cont "CONTAINER=${container}" '.jobs.include[]|select(.env==$cont)' .travis.yml)
+	if [[ -z "${EXISTS}" ]]; then
+		echo "[***] ${STAGE} - Container ${container} detected, adding to future builds."
+		yq -y --argjson new "{\"stage\":\"build\", \"env\": \"CONTAINER=${container}\"}" '.jobs.include += [$new]' .travis.yml > travis.tmp
+		mv travis.tmp .travis.yml
+		git add .travis.yml
+		if [[ "${CI}" == "true" && "${TRAVIS}" == "true" ]]; then
+			git commit -m "travisci: Added container ${container}"
+			TRAVIS_UPDATE="true"
+		fi
+	fi
+done
+
+# Run each containers version script to see if a rebuild is necessary
+echo "[***] ${STAGE} - Running each container's cron script to trip changes."
+for cronFile in $(ls -1 | grep '.\(cron\)' | awk -F'.' 'BEGIN{OFS="."};NF{NF-=1};1'); do
+        if [[ -x "${cronFile}.cron" ]]; then
+                export CONTAINER=${cronFile%.*}
+                echo "[***] ${STAGE} - ${CONTAINER} - Running checks for updates."
+                bash ${cronFile}.cron
+        fi
+done
+git add *.LATEST *.VERSIONS
+
+VERSION_UPDATE="false"
+MESSAGE="Version Update: "
+for container in $(git status -s | awk -F '[. ]' '/LATEST/ || /VERSIONS/{print $(NF-1)}' | sort -u); do
+	c_ver=$(tail -n 1 ${container}.VERSIONS)
+	MESSAGE+="${container}(${c_ver}),"
+	echo "[***] ${STAGE} - ${container} - New Version ${c_ver}"
+	if [[ "${VERSION_UPDATE}" == "false" ]]; then
+		VERSION_UPDATE="true"
+	fi
+done
+
+# Commit back the changes
+if [[ "${CI}" == "true" && "${TRAVIS}" == "true" ]]; then
+	if [[ "${VERSION_UPDATE}" == "true" ]]; then
+		git commit -m "${MESSAGE::-1}"
+	fi
+	if [[ "${TRAVIS_UPDATE}" == "true" || "${VERSION_UPDATE}" == "true" ]]; then
+		echo "[***] ${STAGE} - Pushing changes back to master branch."
+		git push --quiet -u "${REMOTE}" "${BRANCH}"
+	fi
+fi
+

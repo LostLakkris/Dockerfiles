@@ -1,9 +1,0 @@
-#!/bin/bash
-(
-	source /tmp/lakkris.env
-	if [[ -x "/lakkris/pre/${LAKKRIS_SERVICE}.sh" ]]; then
-		# Execute the pre-start script
-		bash /lakkris/pre/${LAKKRIS_SERVICE}.sh
-		bash /lakkris/misc/serf-tags.sh
-	fi
-) &

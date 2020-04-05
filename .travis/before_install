@@ -1,0 +1,5 @@
+#!/bin/bash
+STAGE="before_install"
+echo '{"experimental":true}' | sudo tee /etc/docker/daemon.json
+
+source .travis/common

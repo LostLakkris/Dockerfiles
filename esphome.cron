@@ -1,0 +1,48 @@
+#!/bin/bash
+set -e
+DOCKER_REPO=esphome/esphome
+
+function listDockerTags() {
+	local repo=${1}
+	local size=25
+	local page=1
+	[ -z "${repo}" ] && echo "Usage: listTags <repoName>" 1>&2 && return 1
+	CONT=1
+	NEXT="https://hub.docker.com/v2/repositories/${repo}/tags?n=${size}&page=${page}"
+	while [[ ${CONT} -eq 1 ]]; do
+		RESULT=$(curl "${NEXT}" 2>/dev/null|jq -c --raw-output '.')
+		echo ${RESULT} | jq -r '.results[].name' | sort -rV >> /tmp/versions
+		NEXT=$(echo ${RESULT} | jq -r '.next')
+		if [[ -z "${NEXT}" || "${NEXT}" == "null" ]]; then
+			CONT=0
+		else
+			sleep 1s
+		fi
+	done
+	sort -V /tmp/versions
+	rm /tmp/versions
+}
+
+listDockerTags ${DOCKER_REPO} > /tmp/${CONTAINER}.VERSIONS
+
+# Set LATEST
+grep -v '\([a-Z]\)' /tmp/${CONTAINER}.VERSIONS | sort -V | tail -n 1 > ${CONTAINER}.LATEST
+
+# Add 1 missing to VERSIONS
+ADDED=0
+if [[ ! -e ${CONTAINER}.VERSIONS ]]; then
+        touch ${CONTAINER}.VERSIONS
+fi
+for x in $( grep -v '\([a-Z]\)' /tmp/${CONTAINER}.VERSIONS | sort -V); do
+        if ! grep -q "^${x}$" ${CONTAINER}.VERSIONS; then
+                if [[ ${ADDED} -eq 0 ]]; then
+                        echo ${x} >> ${CONTAINER}.VERSIONS
+                        ADDED=1
+                else
+                        break
+                fi
+        fi
+done
+if [[ -e /tmp/${CONTAINER}.VERSIONS ]]; then
+	rm /tmp/${CONTAINER}.VERSIONS
+fi

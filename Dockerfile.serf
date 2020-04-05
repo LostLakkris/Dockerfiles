@@ -1,4 +1,0 @@
-FROM lsiobase/alpine:3.10
-ENV SET_SERVICE="serf"
-LABEL "lostlakkris.service"="serf"
-COPY s6.lakkris/ /
