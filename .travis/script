@@ -17,11 +17,11 @@ DOCKER_ARGS+=( "buildx" "build" "--push" )
 
 ## Grab upstream image's arches, or permit committed override
 echo "[***] ${STAGE} - Using 'docker buildx' to construct the multi-arch images."
+PLATFORMS=""
 if [[ -e "${CONTAINER}.platforms" ]]; then
         PLATFORMS=$(cat "${CONTAINER}.platforms")
-elif [[ -z "${CONTAINER}.platforms" ]]; then
+else
         FROM=$(awk '/^FROM/{print $NF}' "${DOCKERFILE_PATH}" | tail -n 1)
-        PLATFORMS=""
         for PLAT in $(docker manifest inspect "${FROM}" | jq -c --raw-output '.manifests[].platform'); do
                 PLAT_OS=$(echo "${PLAT}" | jq -c --raw-output '.os')
                 PLAT_ARCH=$(echo "${PLAT}" | jq -c --raw-output '.architecture')
@@ -74,6 +74,7 @@ case ${TAG_STYLE} in
 		if [[ -e "${CONTAINER}.LATEST" && -e "${CONTAINER}.VERSIONS" ]]; then
 		        LATEST_VERSION=$(cat "${CONTAINER}.LATEST")
 		        THIS_VERSION=$(tail -n1 "${CONTAINER}.VERSIONS")
+			DOCKER_TAGS+=( "-t" "${DOCKER_ORG}/${CONTAINER}:${THIS_VERSION}" )
 		        SUBTAG=${THIS_VERSION}
 		        while [[ -n "${SUBTAG//[^.]}" ]]; do
 		                LATEST_MATCH=$(awk "/${SUBTAG%.**}/ {a=\$0} END{print a}" "${CONTAINER}.VERSIONS")

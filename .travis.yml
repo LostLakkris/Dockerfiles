@@ -31,7 +31,6 @@ stages:
   - name: build
     if: type != cron
   - name: cron
-    if: type = cron
 jobs:
   include:
     - stage: cron

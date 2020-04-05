@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 apk add --no-cache \
-	git curl
+	git curl \
 	nginx php7-fpm \
 	php7-json php7-mbstring php7-iconv \
 	php7-session php7-xml php7-curl \

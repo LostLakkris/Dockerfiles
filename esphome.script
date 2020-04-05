@@ -6,7 +6,6 @@ ESP_MAP=(
 "linux/arm64,esphome/esphome-aarch64"
 )
 
-
 DOCKER_TAGS=()
 
 # Determine version to be built
@@ -19,6 +18,8 @@ if [[ $? -eq 0 ]]; then
 	echo "[***] ${STAGE} - ${DOCKER_ORG}/${CONTAINER}:${THIS_VERSION} already exists."
 	exit 0
 fi
+
+DOCKER_TAGS+=( "${DOCKER_ORG}/${CONTAINER}:${THIS_VERSION}" )
 
 # Determine necessary tags
 SUBTAG=${THIS_VERSION}
@@ -35,15 +36,20 @@ if [[ -n "${LATEST_VERSION}" && -n "${THIS_VERSION}" && "${LATEST_VERSION}" == "
 	DOCKER_TAGS+=( "${DOCKER_ORG}/${CONTAINER}:latest" )
 fi
 
+# Determine what origin versions even exist
+MANIFEST_MAP=()
 for i in $(seq 0  $(( ${#ESP_MAP[@]} - 1)) ); do
-	ESP_MAP[${i}]="${ESP_MAP[${i}]}:${THIS_VERSION}"
+	docker manifest inspect "${ESP_MAP[${i}]#*,}:${THIS_VERSION}" &>/dev/null
+	if [[ $? -eq 0 ]]; then
+		MANIFEST_MAP+=( "${ESP_MAP[${i}]}:${THIS_VERSION}" )
+	fi
 done
 
 echo "[***] ${STAGE} - Tags queued: ${DOCKER_TAGS[@]}"
 
 for TAG in ${DOCKER_TAGS[@]}; do
-	docker manifest create ${TAG} ${ESP_MAP[@]#*,}
-	for ENTRY in ${ESP_MAP[@]}; do
+	docker manifest create ${TAG} ${MANIFEST_MAP[@]#*,}
+	for ENTRY in ${MANIFEST_MAP[@]}; do
 		DOCKER_OS=$(echo ${ENTRY%,*} | cut -d'/' -f1)
 		DOCKER_ARCH=$(echo ${ENTRY%,*} | cut -d'/' -f2)
 		DOCKER_VARIANT=$(echo ${ENTRY%,*} | cut -d'/' -f3)
