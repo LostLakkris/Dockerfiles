@@ -57,3 +57,5 @@ jobs:
       env: CONTAINER=organizr
     - stage: build
       env: CONTAINER=radarr
+    - stage: build
+      env: CONTAINER=shinobi
