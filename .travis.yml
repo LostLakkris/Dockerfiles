@@ -55,3 +55,5 @@ jobs:
       env: CONTAINER=nzbhydra
     - stage: build
       env: CONTAINER=organizr
+    - stage: build
+      env: CONTAINER=radarr
