@@ -15,34 +15,6 @@ fi
 DOCKER_ARGS=()
 DOCKER_ARGS+=( "buildx" "build" "--push" )
 
-## Grab upstream image's arches, or permit committed override
-echo "[***] ${STAGE} - Using 'docker buildx' to construct the multi-arch images."
-PLATFORMS=""
-if [[ -e "${CONTAINER}.platforms" ]]; then
-        PLATFORMS=$(cat "${CONTAINER}.platforms")
-else
-        FROM=$(awk '/^FROM/{print $NF}' "${DOCKERFILE_PATH}" | tail -n 1)
-        for PLAT in $(docker manifest inspect "${FROM}" | jq -c --raw-output '.manifests[].platform'); do
-                PLAT_OS=$(echo "${PLAT}" | jq -c --raw-output '.os')
-                PLAT_ARCH=$(echo "${PLAT}" | jq -c --raw-output '.architecture')
-                PLAT_VARIANT=$(echo "${PLAT}" | jq -c --raw-output '.variant')
-                echo "[***] ${STAGE} - Detected remote: ${PLAT_OS} - ${PLAT_ARCH}"
-                if [[ -n "${PLATFORMS}" ]]; then
-                        PLATFORMS+=","
-                fi
-                PLATFORMS+="${PLAT_OS}/${PLAT_ARCH}"
-                if [[ -n "${PLAT_VARIANT}" && "${PLAT_VARIANT}" != "null" ]]; then
-                        PLATFORMS+="/${PLAT_VARIANT}"
-                fi
-        done
-fi
-
-if [[ -z "${PLATFORMS}" ]]; then
-        PLATFORMS="linux/amd64"
-fi
-echo "[***] ${STAGE} - Platform string used: '${PLATFORMS}'"
-DOCKER_ARGS+=( "--platform" "${PLATFORMS}" )
-
 ## Prep the buildx environment
 echo "[***] ${STAGE} - Create and use buildx context"
 docker buildx create --name "${CONTAINER}"
@@ -72,26 +44,28 @@ case ${TAG_STYLE} in
 		LATEST_VERSION=""
 		THIS_VERSION=""
 		if [[ -e "${CONTAINER}.LATEST" && -e "${CONTAINER}.VERSIONS" ]]; then
-		        LATEST_VERSION=$(cat "${CONTAINER}.LATEST")
-		        THIS_VERSION=$(tail -n1 "${CONTAINER}.VERSIONS")
+			LATEST_VERSION=$(cat "${CONTAINER}.LATEST")
+			THIS_VERSION=$(tail -n1 "${CONTAINER}.VERSIONS")
 			DOCKER_TAGS+=( "-t" "${DOCKER_ORG}/${CONTAINER}:${THIS_VERSION}" )
-		        SUBTAG=${THIS_VERSION}
-		        while [[ -n "${SUBTAG//[^.]}" ]]; do
-		                LATEST_MATCH=$(awk "/${SUBTAG%.**}/ {a=\$0} END{print a}" "${CONTAINER}.VERSIONS")
-		                if [[ "${LATEST_MATCH}" == "${THIS_VERSION}" ]]; then
-		                        DOCKER_TAGS+=( "-t" "${DOCKER_ORG}/${CONTAINER}:${SUBTAG%.**}" )
-		                        echo "[***] ${STAGE} - Queing tag ${DOCKER_ORG}/${CONTAINER}:${SUBTAG%.**}"
-		                fi
-		                SUBTAG=${SUBTAG%.**}
-		        done
+			echo "[***] ${STAGE} - Queing tag ${DOCKER_ORG}/${CONTAINER}:${THIS_VERSION}"
+			SUBTAG=${THIS_VERSION}
+			while [[ -n "${SUBTAG//[^.-]}" ]]; do
+				LATEST_MATCH=$(awk "/${SUBTAG%.**}/ {a=\$0} END{print a}" "${CONTAINER}.VERSIONS")
+				if [[ "${LATEST_MATCH}" == "${THIS_VERSION}" ]]; then
+					DOCKER_TAGS+=( "-t" "${DOCKER_ORG}/${CONTAINER}:${SUBTAG%.**}" )
+					echo "[***] ${STAGE} - Queing tag ${DOCKER_ORG}/${CONTAINER}:${SUBTAG%.**}"
+				fi
+#				SUBTAG=${SUBTAG%.**}
+				SUBTAG=$(echo "${SUBTAG}" | awk -F'[.-]' '{gsub("[.-]"$NF,"");print}')
+			done
 		fi
 
 		if [[ -n "${LATEST_VERSION}" && -n "${THIS_VERSION}" && "${LATEST_VERSION}" == "${THIS_VERSION}" ]]; then
-		        DOCKER_TAGS+=( "-t" "${DOCKER_ORG}/${CONTAINER}:latest" )
-		        echo "[***] ${STAGE} - Queing tag ${DOCKER_ORG}/${CONTAINER}:latest"
+			DOCKER_TAGS+=( "-t" "${DOCKER_ORG}/${CONTAINER}:latest" )
+			echo "[***] ${STAGE} - Queing tag ${DOCKER_ORG}/${CONTAINER}:latest"
 		else
-		        DOCKER_TAGS+=( "-t" "${DOCKER_ORG}/${CONTAINER}:debug" )
-		        echo "[***] ${STAGE} - Queing tag ${DOCKER_ORG}/${CONTAINER}:debug"
+			DOCKER_TAGS+=( "-t" "${DOCKER_ORG}/${CONTAINER}:debug" )
+			echo "[***] ${STAGE} - Queing tag ${DOCKER_ORG}/${CONTAINER}:debug"
 		fi
 		if [[ -n "${THIS_VERSION}" ]]; then
 			DOCKER_ARGS+=( "--build-arg" "RELEASE=${THIS_VERSION}" )
@@ -99,6 +73,37 @@ case ${TAG_STYLE} in
 		;;
 esac
 DOCKER_ARGS+=( ${DOCKER_TAGS[@]} )
+
+## Grab upstream image's arches, or permit committed override
+echo "[***] ${STAGE} - Using 'docker buildx' to construct the multi-arch images."
+PLATFORMS=""
+if [[ -e "${CONTAINER}.platforms" ]]; then
+	PLATFORMS=$(cat "${CONTAINER}.platforms")
+else
+	FROM=$(awk '/^FROM/{print $NF}' "${DOCKERFILE_PATH}" | tail -n 1)
+	if [[ -n "${THIS_VERSION}" && ("${FROM}" == *'${RELEASE}' || "${FROM}" == *'$RELEASE') ]]; then
+		FROM=$(echo "${FROM}" | sed -e "s@\${RELEASE}@${THIS_VERSION}@g" -e "s@\$RELEASE@${THIS_VERSION}@g")
+	fi
+	for PLAT in $(docker manifest inspect "${FROM}" | jq -c --raw-output '.manifests[].platform'); do
+		PLAT_OS=$(echo "${PLAT}" | jq -c --raw-output '.os')
+		PLAT_ARCH=$(echo "${PLAT}" | jq -c --raw-output '.architecture')
+		PLAT_VARIANT=$(echo "${PLAT}" | jq -c --raw-output '.variant')
+		echo "[***] ${STAGE} - Detected remote: ${PLAT_OS} - ${PLAT_ARCH}"
+		if [[ -n "${PLATFORMS}" ]]; then
+			PLATFORMS+=","
+		fi
+		PLATFORMS+="${PLAT_OS}/${PLAT_ARCH}"
+		if [[ -n "${PLAT_VARIANT}" && "${PLAT_VARIANT}" != "null" ]]; then
+			PLATFORMS+="/${PLAT_VARIANT}"
+		fi
+	done
+fi
+
+if [[ -z "${PLATFORMS}" ]]; then
+	PLATFORMS="linux/amd64"
+fi
+echo "[***] ${STAGE} - Platform string used: '${PLATFORMS}'"
+DOCKER_ARGS+=( "--platform" "${PLATFORMS}" )
 
 echo "[***] ${STAGE} - Starting build+push of '${DOCKER_ORG}/${CONTAINER}'"
 DOCKER_ARGS+=( "-f" "${DOCKERFILE_PATH}" "." )
