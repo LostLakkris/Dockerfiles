@@ -37,3 +37,5 @@ jobs:
       before_install: bash .travis/cron before_install
       before_script: bash .travis/cron before_script
       script: bash .travis/cron script
+    - stage: build
+      env: CONTAINER=autoheal
