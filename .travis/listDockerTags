@@ -12,8 +12,6 @@ function listDockerTags() {
                 NEXT=$(echo ${RESULT} | jq -r '.next')
                 if [[ -z "${NEXT}" || "${NEXT}" == "null" ]]; then
                         CONT=0
-                else
-                        sleep 1s
                 fi
         done
         sort -V /tmp/versions
