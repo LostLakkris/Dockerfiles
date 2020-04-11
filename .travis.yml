@@ -22,7 +22,7 @@ before_install:
 before_script:
   - bash .travis/before_script
 script:
-  - bash .travis/script
+  - travis_retry bash .travis/script
 env:
   global:
     - DOCKER_CLI_EXPERIMENTAL=enabled
