@@ -59,3 +59,5 @@ jobs:
       env: CONTAINER=nzbget
     - stage: build
       env: CONTAINER=nzbhydra
+    - stage: build
+      env: CONTAINER=organizr
