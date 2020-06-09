@@ -67,3 +67,5 @@ jobs:
       env: CONTAINER=shinobi
     - stage: build
       env: CONTAINER=sonarr
+    - stage: build
+      env: CONTAINER=tautulli
