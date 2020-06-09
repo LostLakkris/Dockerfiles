@@ -1,7 +1,7 @@
 #!/bin/bash
 STAGE="script"
 source .travis/_functions.sh
-#docker login -u "${DOCKER_USERNAME}" -p "${DOCKER_PASSWORD}" &> /dev/null
+docker login -u "${DOCKER_USERNAME}" -p "${DOCKER_PASSWORD}" &> /dev/null
 OPWD=$PWD
 
 CONTAINERS=()
@@ -119,7 +119,9 @@ for CONTAINER in ${CONTAINERS[@]}; do
 	DOCKER_ARGS+=( ${DOCKER_TAGS[@]} )
 
 	# Build and Push
-	echo docker ${DOCKER_ARGS[@]}
+	_log "Starting build+push of '${DOCKER_ORG}/${CONTAINER}'"
+	DOCKER_ARGS+=( "-f" "Dockerfile" "." )
+	docker ${DOCKER_ARGS[@]}
 
 	cd ${OPWD}
 done
