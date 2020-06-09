@@ -53,3 +53,5 @@ jobs:
       env: CONTAINER=lazylibrarian
     - stage: build
       env: CONTAINER=lidarr
+    - stage: build
+      env: CONTAINER=mariadb
