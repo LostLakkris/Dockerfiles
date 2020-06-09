@@ -69,3 +69,5 @@ jobs:
       env: CONTAINER=sonarr
     - stage: build
       env: CONTAINER=tautulli
+    - stage: build
+      env: CONTAINER=webtrees
