@@ -1,13 +1,12 @@
 #!/bin/bash
 STAGE="before_script"
+source .travis/_functions.sh
 export DOCKER_CLI_EXPERIMENTAL=enabled
 
-echo "[***] ${STAGE} - Info about the OS"
+_log "OS Info"
 cat /etc/*-release
 
-source .travis/common
-
-echo "[***] ${STAGE} - Adding qemu-user-static container, and binfmt"
+_log "Adding qemu-user-static container, and binfmt"
 docker run --rm --privileged multiarch/qemu-user-static:register --reset
 docker run --privileged linuxkit/binfmt:v0.7
 echo

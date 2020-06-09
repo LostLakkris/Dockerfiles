@@ -2,7 +2,7 @@ os: linux
 dist: bionic
 language: shell
 services:
-  - docker
+- docker
 addons:
   apt:
     update: true
@@ -18,50 +18,30 @@ addons:
       - jq
       - git
 before_install:
-  - bash .travis/before_install
+- bash .travis/before_install
 before_script:
-  - bash .travis/before_script
+- bash .travis/before_script
 script:
-  - travis_retry bash .travis/script
+- travis_retry bash .travis/script
 env:
   global:
     - DOCKER_CLI_EXPERIMENTAL=enabled
     - DOCKER_ORG=lostlakkris
 stages:
-  - name: build
-    if: type != cron
-  - name: cron
+- name: build
+  if: type != cron
+- name: meta
+  if: type != cron
+- name: cron
 jobs:
   include:
+    - stage: meta
+      before_install: bash .travis/meta before_install
+      before_script: bash .travis/meta before_script
+      script: travis_retry bash .travis/meta script
     - stage: cron
       before_install: bash .travis/cron before_install
       before_script: bash .travis/cron before_script
-      script: bash .travis/cron script
+      script: travis_retry bash .travis/cron script
     - stage: build
       env: CONTAINER=autoheal
-    - stage: build
-      env: CONTAINER=esphome
-    - stage: build
-      env: CONTAINER=git-sync
-    - stage: build
-      env: CONTAINER=lazylibrarian
-    - stage: build
-      env: CONTAINER=lidarr
-    - stage: build
-      env: CONTAINER=mariadb
-    - stage: build
-      env: CONTAINER=nzbget
-    - stage: build
-      env: CONTAINER=nzbhydra
-    - stage: build
-      env: CONTAINER=organizr
-    - stage: build
-      env: CONTAINER=radarr
-    - stage: build
-      env: CONTAINER=shinobi
-    - stage: build
-      env: CONTAINER=sonarr
-    - stage: build
-      env: CONTAINER=tautulli
-    - stage: build
-      env: CONTAINER=webtrees

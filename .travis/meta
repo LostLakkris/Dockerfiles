@@ -1,0 +1,10 @@
+#!/bin/bash
+STAGE="meta"
+source .travis/_functions.sh
+if [[ "${1}" != "before_install" ]]; then
+        _log "Skipping, this script only runs during before_install."
+fi
+
+if [[ -z "$(which yq)" ]]; then
+        sudo pip install yq
+fi

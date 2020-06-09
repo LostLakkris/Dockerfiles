@@ -1,0 +1,17 @@
+default:
+# Portainer
+  title:
+  name:
+  description:
+  logo:
+  image:
+  note:
+  categories: []
+  platform:
+  restart_policy:
+  ports: []
+  volumes: []
+  env: []
+  labels: []
+# Hassio
+  arch: []
