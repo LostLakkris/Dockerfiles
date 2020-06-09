@@ -51,3 +51,5 @@ jobs:
       env: CONTAINER=git-sync
     - stage: build
       env: CONTAINER=lazylibrarian
+    - stage: build
+      env: CONTAINER=lidarr
