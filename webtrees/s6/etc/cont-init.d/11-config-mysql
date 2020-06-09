@@ -1,0 +1,83 @@
+#!/usr/bin/with-contenv bash
+if [[ -z "${MYSQL_ROOT_PASSWORD}" ]]; then
+	MYSQL_ROOT_PASSWORD="password"
+fi
+sql_preseed='/tmp/mysql-preseed.sql'
+
+if [[ ! -d /run/mysqld ]]; then
+	mkdir /run/mysqld
+fi
+chown -R abc:abc \
+	/run/mysqld
+
+preseed_mysql(){
+	/usr/bin/mysql_install_db -P 6603 --user=abc --datadir=/config/mysql
+	/usr/bin/mysqld -P 6603 --user=abc --datadir=/config/mysql --init-file="${sql_preseed}" &
+	pid="$!"
+	RET=1
+	while [[ $RET -ne 0 ]]; do
+		/usr/bin/mysql -P 6603 -uroot -p"${MYSQL_ROOT_PASSWORD}" -e "status" > /dev/null 2>&1
+		RET=$?
+		sleep 1
+	done
+	/usr/bin/mysqladmin -P 6603 -u root -p"${MYSQL_ROOT_PASSWORD}" shutdown
+	wait "$pid"
+	rm ${sql_preseed}
+}
+
+# Premodify some mariadb configs
+sed -i 's/key_buffer\b/key_buffer_size/g' /etc/my.cnf.d/mariadb-server.cnf
+sed -ri 's/^(bind-address|skip-networking)/;\1/' /etc/my.cnf.d/mariadb-server.cnf
+sed -i 's#/var/log/mysql#/config/log/mysql#g' /etc/my.cnf.d/mariadb-server.cnf
+sed -i -e 's/\(user.*=\).*/\1 abc/g' /etc/my.cnf.d/mariadb-server.cnf
+sed -i -e "s#\\(datadir.*=\\).*#\\1 $DATADIR/mysql#g" /etc/my.cnf.d/mariadb-server.cnf
+sed -i "s/user='mysql'/user='abc'/g" /usr/bin/mysqld_safe
+
+# Prime the mysql data directory
+if [[ ! -d /config/mysql ]]; then
+	echo "Database Setup Starting"
+	# Clear things
+	cat > "$sql_preseed" <<-EOSQL
+		DELETE FROM mysql.user ;
+	EOSQL
+
+	# Add default root password
+	cat >> "$sql_preseed" <<-EONEWSQL
+	CREATE USER 'root'@'%' IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}' ;
+	GRANT ALL ON *.* TO 'root'@'%' WITH GRANT OPTION ;
+	DROP DATABASE IF EXISTS test ;
+	EONEWSQL
+
+	# Create database if defined
+	if [[ -n "${MYSQL_DATABASE}" ]]; then
+		cat >> "${sql_preseed}" <<-EOSQL
+			CREATE DATABASE IF NOT EXISTS \`${MYSQL_DATABASE}\`;
+		EOSQL
+	fi
+	# Create sql user if defined
+	if [[ -n "${MYSQL_USER}" && -n "${MYSQL_PASSWORD}" ]]; then
+		cat >> "${sql_preseed}" <<-EOSQL
+			CREATE USER '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}' ;
+		EOSQL
+		if [[ -n "${MYSQL_DATABASE}" ]]; then
+			cat >> "${sql_preseed}" <<-EOSQL
+				GRANT ALL ON \`${MYSQL_DATABASE}\`.* TO '${MYSQL_USER}'@'%' ;
+			EOSQL
+		fi
+	fi
+
+	if [[ -n "${MYSQL_PRESEED}" && -f "${MYSQL_PRESEED}" ]]; then
+		# Add application's preseed
+		echo "" >> "${sql_preseed}"
+		cat "${MYSQL_PRESEED}" >> "${sql_preseed}"
+	fi
+
+	preseed_mysql
+	echo "Database Setup Completed"
+fi
+
+# Ensure the mysql data directory is correctly owned
+if [[ -d /config/mysql ]]; then
+	chown -R abc:abc \
+		/config/mysql
+fi
