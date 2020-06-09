@@ -1,6 +1,7 @@
 #!/bin/bash
 STAGE="meta"
 source .travis/_functions.sh
+OPWD=$PWD
 if [[ "${1}" != "before_install" ]]; then
         _log "Skipping, this script only runs during before_install."
 fi
@@ -8,3 +9,45 @@ fi
 if [[ -z "$(which yq)" ]]; then
         sudo pip install yq
 fi
+
+# Clone meta repo somewhere
+git clone "https://${GITHUB_OAUTH_TOKEN}:x-oauth-basic@github.com/LostLakkris/templates.git" /tmp/templates &> /dev/null
+
+CONTAINERS+=( $(yq -c --raw-output '.jobs.include[]|select(.stage=="build").env' .travis.yml | sed 's@CONTAINER=@@g' | sort) )
+
+echo "[]" > /tmp/portainer.json
+# Portainer config is single json file
+# Hassio config is multiple json files
+for CONTAINER in ${CONTAINERS[@]}; do
+	cd ${CONTAINER}
+	if [[ ! -e hassio-addon.sh && ! -e portainer-template.sh ]]; then
+		_log "Container has no meta-data configuration."
+		continue
+	fi
+	# TODO: As I create these scripts, see how this can be simplified
+
+	if [[ -e "hassio-addon.sh" ]]; then
+		if [[ ! -d "/tmp/templates/${CONTAINER}" ]]; then
+			mkdir "/tmp/templates/${CONTAINER}"
+		fi
+		bash hassio-addon.sh > "/tmp/templates/${CONTAINER}/config.json"
+	fi
+
+	if [[ -e "portainer-template.sh" ]]; then
+		bash portainer-template.sh > /tmp/container.json
+		jq -c --raw-output -s '.[0] += [.[1]] | .[0]' /tmp/portainer.json /tmp/container.json > /tmp/portainer.json.2
+		mv /tmp/portainer.json.2 /tmp/portainer.json
+		rm /tmp/container.json
+	fi
+
+	cd ${OPWD}
+done
+
+jq '.' /tmp/portainer.json > /tmp/templates/portainer.json
+cd /tmp/templates
+git config user.email "travis@travis-ci.org"
+git config user.name "Travis CI"
+git config push.default current
+git add .
+git commit -m 'Prototype Container Metadata update'
+git push --quiet
