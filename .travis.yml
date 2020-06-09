@@ -47,3 +47,5 @@ jobs:
       env: CONTAINER=autoheal
     - stage: build
       env: CONTAINER=esphome
+    - stage: build
+      env: CONTAINER=git-sync
