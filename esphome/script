@@ -9,8 +9,8 @@ ESP_MAP=(
 DOCKER_TAGS=()
 
 # Determine version to be built
-LATEST_VERSION=$(cat ${CONTAINER}.LATEST)
-THIS_VERSION=$(tail -n1 ${CONTAINER}.VERSIONS)
+LATEST_VERSION=$(cat LATEST)
+THIS_VERSION=$(tail -n1 VERSIONS)
 
 # See if this version has explicitly been defined
 docker manifest inspect "${DOCKER_ORG}/${CONTAINER}:${THIS_VERSION}" &>/dev/null
@@ -24,7 +24,7 @@ DOCKER_TAGS+=( "${DOCKER_ORG}/${CONTAINER}:${THIS_VERSION}" )
 # Determine necessary tags
 SUBTAG=${THIS_VERSION}
 while [[ -n "${SUBTAG//[^.]}" ]]; do
-	LATEST_MATCH=$(awk "/${SUBTAG%.**}/ {a=\$0} END{print a}" "${CONTAINER}.VERSIONS")
+	LATEST_MATCH=$(awk "/${SUBTAG%.**}/ {a=\$0} END{print a}" "VERSIONS")
 	if [[ "${LATEST_MATCH}" == "${THIS_VERSION}" ]]; then
 		DOCKER_TAGS+=( "${DOCKER_ORG}/${CONTAINER}:${SUBTAG%.**}" )
 		echo "[***] ${STAGE} - Queing tag ${DOCKER_ORG}/${CONTAINER}:${SUBTAG%.**}"

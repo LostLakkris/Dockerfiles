@@ -5,6 +5,6 @@ DOCKER_REPO=organizrtools/organizr-v2
 # Get CURRENT
 CURRENT=$(curl -s https://hub.docker.com/v2/repositories/${DOCKER_REPO}/tags/latest | jq -c --raw-output '.last_updated' | tr ':' '-' | cut -d'.' -f1)
 if [[ -n "${CURRENT}" && "${CURRENT}" != "null" && "${CURRENT}" == "2"* ]]; then
-	echo "${CURRENT}" > ${CONTAINER}.LATEST
-	echo "${CURRENT}" > ${CONTAINER}.VERSIONS
+	echo "${CURRENT}" > LATEST
+	echo "${CURRENT}" > .VERSIONS
 fi

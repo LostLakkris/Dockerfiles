@@ -6,6 +6,6 @@ REMOTE_BRANCH="dev"
 # Get CURRENT
 CURRENT=$(git ls-remote ${REMOTE_REPO} ${REMOTE_BRANCH} | awk '{print $1}')
 if [[ -n "${CURRENT}" && "${CURRENT}" != "null" ]]; then
-	echo "${CURRENT}" > ${CONTAINER}.LATEST
-	echo "${CURRENT}" > ${CONTAINER}.VERSIONS
+	echo "${CURRENT}" > LATEST
+	echo "${CURRENT}" > VERSIONS
 fi

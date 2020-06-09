@@ -3,17 +3,17 @@ set -e
 REMOTE_REPO=https://github.com/fisharebest/webtrees.git
 
 # Set LATEST
-git ls-remote --tags ${REMOTE_REPO} | awk -F '/' '!/{}/{print $NF}' | grep -v '\(-[a-Z]\)' | sort -V | tail -n1 > ${CONTAINER}.LATEST
+git ls-remote --tags ${REMOTE_REPO} | awk -F '/' '!/{}/{print $NF}' | grep -v '\(-[a-Z]\)' | sort -V | tail -n1 > LATEST
 
 # Add 1 missing to VERSIONS
 ADDED=0
-if [[ ! -e ${CONTAINER}.VERSIONS ]]; then
-        touch ${CONTAINER}.VERSIONS
+if [[ ! -e VERSIONS ]]; then
+        touch VERSIONS
 fi
 for x in $(git ls-remote --tags ${REMOTE_REPO} | awk -F '/' '!/{}/{print $NF}' | grep -v '\(-[a-Z]\)' | sort -V); do
-        if ! grep -q "^${x}$" ${CONTAINER}.VERSIONS; then
+        if ! grep -q "^${x}$" VERSIONS; then
                 if [[ ${ADDED} -eq 0 ]]; then
-                        echo ${x} >> ${CONTAINER}.VERSIONS
+                        echo ${x} >> VERSIONS
                         ADDED=1
                 else
                         break
