@@ -22,6 +22,7 @@ for CONTAINER in ${CONTAINERS[@]}; do
 	cd ${CONTAINER}
 	if [[ ! -e hassio-addon.sh && ! -e portainer-template.sh ]]; then
 		_log "Container has no meta-data configuration."
+		cd ${OPWD}
 		continue
 	fi
 	# TODO: As I create these scripts, see how this can be simplified

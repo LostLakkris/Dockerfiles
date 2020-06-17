@@ -2,7 +2,7 @@
 set -e
 DOCKER_REPO=esphome/esphome
 
-bash .travis/listDockerTags ${DOCKER_REPO} | grep -v '\([a-Z]\)' > /tmp/${CONTAINER}.VERSIONS
+bash ${TRAVIS_BUILD_DIR}/.travis/listDockerTags ${DOCKER_REPO} | grep -v '\([a-Z]\)' > /tmp/${CONTAINER}.VERSIONS
 
 # Set LATEST
 sort -V /tmp/${CONTAINER}.VERSIONS | tail -n 1 > LATEST

@@ -2,7 +2,7 @@
 set -e
 DOCKER_REPO=linuxserver/sonarr
 
-bash .travis/listDockerTags ${DOCKER_REPO} | awk '/^[0-9]/ && /-ls/' > /tmp/${CONTAINER}.VERSIONS
+bash ${TRAVIS_BUILD_DIR}/.travis/listDockerTags ${DOCKER_REPO} | awk '/^[0-9]/ && /-ls/' > /tmp/${CONTAINER}.VERSIONS
 
 # Set LATEST
 sort -V /tmp/${CONTAINER}.VERSIONS | tail -n 1 > LATEST
