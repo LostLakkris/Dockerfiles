@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-DOCKER_REPO=linuxserver/hydra2
+DOCKER_REPO=linuxserver/nzbhydra2
 
 bash ${TRAVIS_BUILD_DIR}/.travis/listDockerTags ${DOCKER_REPO} | awk '/^v/ && /-ls/' > /tmp/${CONTAINER}.VERSIONS
 
@@ -9,8 +9,8 @@ sort -V /tmp/${CONTAINER}.VERSIONS | tail -n 1 > LATEST
 
 # Add 1 missing to VERSIONS
 ADDED=0
-if [[ ! -e ${CONTAINER}.VERSIONS ]]; then
-        touch ${CONTAINER}.VERSIONS
+if [[ ! -e VERSIONS ]]; then
+        touch VERSIONS
 fi
 for x in $( sort -V /tmp/${CONTAINER}.VERSIONS ); do
         if ! grep -q "^${x}$" VERSIONS; then

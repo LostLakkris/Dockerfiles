@@ -1,3 +1,3 @@
 ARG RELEASE
-FROM linuxserver/hydra2:${RELEASE}
+FROM linuxserver/nzbhydra2:${RELEASE}
 LABEL "lostlakkris.service"="nzbhydra"
