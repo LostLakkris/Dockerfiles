@@ -2,7 +2,7 @@ FROM lsiobase/alpine:3.12
 
 COPY s6/ /
 RUN \
-    bash /setup/setup.sh && \
+    bash /setup/mariadb.sh && bash /setup/shinobi.sh && \
     rm -R /setup
 
 VOLUME ["/opt/shinobi/videos", "/config"]
