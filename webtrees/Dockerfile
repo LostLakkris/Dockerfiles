@@ -3,7 +3,8 @@ ARG RELEASE
 
 COPY s6/ /
 RUN \
-    bash /setup/mariadb.sh && bash /setup/webtrees.sh \
+    bash /setup/mariadb.sh && \
+    bash /setup/webtrees.sh && \
     rm -R /setup
 
 VOLUME ["/config"]
