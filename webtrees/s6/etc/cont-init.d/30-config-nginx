@@ -18,6 +18,8 @@ server {
   root /app;
   index index.php index.html index.htm;
   server_name _;
+  client_max_body_size 200M;
+
   location ${SET_URLBASE:-}/public {
     expires 365d;
     access_log off;

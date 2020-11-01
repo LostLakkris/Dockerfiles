@@ -13,4 +13,7 @@ sed -i 's@group = nobody@group = abc@g' /etc/php7/php-fpm.d/www.conf
 sed -i 's@^;listen.owner = nobody@listen.owner = abc@g' /etc/php7/php-fpm.d/www.conf
 sed -i 's@^;listen.group = nobody@listen.group = abc@g' /etc/php7/php-fpm.d/www.conf
 sed -i 's@^;listen.mode@listen.mode@g' /etc/php7/php-fpm.d/www.conf
+
 sed -i 's@max_execution_time = .*@max_execution_time = 90@g' /etc/php7/php.ini
+sed -i 's@upload_max_filesize = .*@upload_max_filesize = 200M@g' /etc/php7/php.ini
+sed -i 's@post_max_size = .*@post_max_size = 200M@g' /etc/php7/php.ini
