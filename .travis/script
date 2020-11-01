@@ -122,6 +122,9 @@ for CONTAINER in ${CONTAINERS[@]}; do
 	_log "Starting build+push of '${DOCKER_ORG}/${CONTAINER}'"
 	DOCKER_ARGS+=( "-f" "Dockerfile" "." )
 	docker ${DOCKER_ARGS[@]}
-
+	OUTCOME=$?
+	if [[ ${OUTCOME} -ne 0 ]]; then
+		exit ${OUTCOME}
+	fi
 	cd ${OPWD}
 done
