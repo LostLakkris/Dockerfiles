@@ -2,7 +2,7 @@
 set -e
 apk add --no-cache \
       git wget zip tar xz curl \
-      nodejs npm python \
+      nodejs npm python3 \
       pkgconfig \
       cairo cairo-dev pango pango-dev libjpeg-turbo libjpeg-turbo-dev \
       ffmpeg
