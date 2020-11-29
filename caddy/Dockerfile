@@ -1,7 +1,7 @@
 ARG RELEASE
 FROM caddy:${RELEASE}-builder AS builder
 
-RUN xcaddy build \
+RUN /usr/bin/xcaddy build \
     --with github.com/ss098/certmagic-s3
 
 FROM caddy:${RELEASE}
